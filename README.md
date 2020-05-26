@@ -10,8 +10,8 @@ The first step creates a fractional solution to the LP and puts it in "output.tx
 
 	To run the first step, run the command line: python3 ./LP_output.py [name].npz U K L
 	where U is the desired upper bound * 100 (U must be an integer)
-    	  K is the upper bound for papers per reviewer
-    	  L is the number of reviewers per paper
+    	K is the upper bound for papers per reviewer
+    	L is the number of reviewers per paper
 
 	If you would like to change the upper bound probability on a specific pair of (paper, reviewer), or change the paper load for a reviewer, you could edit the code following the bolded corresponding comment.
 
@@ -23,7 +23,7 @@ The second step takes the output and converts the fractional solution to a integ
 	For this step, please run the first step beforehand, or have a .txt file of the same format available.
 
 	To run this step, compile bvn.cpp using: g++ -lm bvn.cpp
-				 Then, run the command line: ./a.out < output.txt > output_bvn.txt
+	Then, run the command line: ./a.out < output.txt > output_bvn.txt
 
 	The integral assignment is now in output_bvn.txt, with the first line being the number of total assigned pairs, and all the following lines reviewer-paper matchings in the assignment.
 
