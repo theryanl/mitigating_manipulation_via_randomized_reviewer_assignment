@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 
 def plotA(obj, dataset): # Q vs objective experiment
+    # data = [q_values, our_algo_objectives, avg_baseline_algo_objectives]
     if obj == "sum-similarity":
         data = np.load("A_sum-similarity_" + dataset + ".npy")
         ylab = "Sum-similarity objective (% of optimal)"
@@ -18,6 +19,7 @@ def plotA(obj, dataset): # Q vs objective experiment
     plt.close()
 
 def plotB(): # runtime experiment
+    # data = [sizes, avg_runtimes]
     data = np.load("B.npy")
     plt.plot(data[0], data[1], color='red')
     plt.xlabel("Problem size")
@@ -26,6 +28,7 @@ def plotB(): # runtime experiment
     plt.close()
 
 def plotC(obj, dataset): # institution experiment
+    # data = [number_same-institution_pairs, our_algo_objectives]
     if obj == "sum-similarity":
         data = np.load("C_sum-similarity_" + dataset + ".npy")
         ylab = "Sum-similarity objective (% of optimal)"
@@ -40,9 +43,9 @@ def plotC(obj, dataset): # institution experiment
     plt.close()
 
 def main():
-    if sys.argv[0] == 'A':
-        plotA(sys.argv[1], sys.argv[2])
-    elif sys.argv[0] == 'B':
+    if sys.argv[1] == 'A':
+        plotA(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == 'B':
         plotB()
-    elif sys.argv[0] == 'C':
-        plotC(sys.argv[1], sys.argv[2])
+    elif sys.argv[1] == 'C':
+        plotC(sys.argv[2], sys.argv[3])
