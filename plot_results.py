@@ -33,8 +33,7 @@ def plotC(obj, dataset): # institution experiment
         data = np.load("C_fairness_" + dataset + ".npy")
         ylab = "Fairness objective (% of optimal)"
     plt.plot(data[0], data[1], label="Our Algorithm", color='red') # our algo
-    plt.plot(data[0], data[2], label="Random Removal Baseline", color='black', linestyle='--') # aaai algo
-    plt.xlabel("Average number of same-institution reviewer pairs")
+    plt.xlabel("Number of same-institution reviewer pairs")
     plt.ylabel(ylab)
     plt.legend()
     plt.savefig('C_' + obj + '_' + dataset + '.png')
