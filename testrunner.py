@@ -6,7 +6,7 @@ import time
 start_time = time.time()
 
 my_dataset = sys.argv[1] #npz containing similarity matrix and conflict matrix
-type = int(sys.argv[2]) #type is 0 if TPMS, 1 if max min
+obj_type = int(sys.argv[2]) #type is 0 if TPMS, 1 if max min
 k = int(sys.argv[3]) #k is the upper bound for papers per reviewer
 l = int(sys.argv[4]) #l is the number of reviewers per paper
 
@@ -14,7 +14,7 @@ Q_values = []
 Q_results = []
 AAAI_results = []
 
-if (type == 0):
+if (obj_type == 0):
     for Q in range(10, 110, 10):
         Q_values.append(Q/100)
         print(f"running Q = {Q/100}...")
@@ -39,7 +39,7 @@ if (type == 0):
         print(avg)
     
     
-elif (type == 1):
+elif (obj_type == 1):
     for Q in range(10, 110, 10):
         Q_values.append(Q/100)
         print(f"running Q = {Q/100}...")
@@ -67,6 +67,8 @@ elif (type == 1):
 print("Q_values:", Q_values)
 print("Q_results:", Q_results)
 print("AAAI_results:", AAAI_results)
-np.save("testrunner_results", [Q_values, Q_results, AAAI_results])
+dataset_name = my_dataset.split('.')[0]
+name = "A_" + str(obj_type) + "_" + dataset_name + ".npy"
+np.save(name, [Q_values, Q_results, AAAI_results])
 
 print("time taken", time.time() - start_time)
