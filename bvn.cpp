@@ -363,6 +363,14 @@ int main()
         }
     }
 
+    int count = 0;
+
+    for(int i = 2; i <= tot; i++)
+        if(u[i] < v[i] && f[i] == one)
+            count += 1;
+
+    printf("%d\n", count);
+
     for(int i = 2; i <= tot; i++)
         if(u[i] < v[i] && f[i] == one)
             printf("%d %d\n", u[i] - 1, v[i] - 1);
