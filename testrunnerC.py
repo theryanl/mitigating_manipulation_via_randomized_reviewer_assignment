@@ -26,7 +26,9 @@ if (obj_type == 0):
             result = os.popen # TODO run LP with loads limited to t and Q = 1 and insts
             TPMS_score = float((result.readlines())[-2]) #the objective value
             total += TPMS_score
-            total_pairs += count_num_institution_pairs("output.txt", insts)
+            # TODO run bvn on output.txt and get output_bvn.txt
+            # (make sure to wait for the process to finish)
+            total_pairs += count_num_institution_pairs("output_bvn.txt", insts)
         avg = total / len(inst_list)
         results.append(avg)
         avg_pairs = total_pairs / len(inst_list)
