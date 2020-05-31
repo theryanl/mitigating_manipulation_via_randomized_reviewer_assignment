@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 import time
+from get_paper_totals import get_paper_totals
 
 start_time = time.time()
 
@@ -51,15 +52,22 @@ elif (obj_type == 1):
         print(max_min_fairness)
         
         #getting results for AAAI
-        summ = 0
-        
+        #summ = 0
+        paper_totals_list = [] 
         for i in range(10):
             AAAI_result = os.popen(f"python3 ./AAAI_max_min_fairness.py {my_dataset} {Q/100} {k} {l}")
             AAAI_score = float((AAAI_result.readlines())[-2]) 
             #the objective value
-            summ += AAAI_score
+            #summ += AAAI_score
+            #file.write(f"{name} {value}\n")
+
+            # calculate expected total similarity for each paper
+            paper_totals_list.append(get_paper_totals("output.txt", my_dataset))
+        # average together and take min
+        avg_paper_totals = sum(paper_totals_list) / 10
+        avg = np.min(avg_paper_totals)
             
-        avg = summ/10
+        #avg = summ/10
         AAAI_results.append(avg)
         print(avg)
         
