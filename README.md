@@ -27,8 +27,6 @@ The second step takes the output and converts the fractional solution to a integ
 
 	The integral assignment is now in output_bvn.txt, with the first line being the number of total assigned pairs, and all the following lines reviewer-paper matchings in the assignment.
 
-	Note: this step has random elements, so running it a few times and using the assignment with the highest sum similarity may yield minor increases in total sum similarity.
-
 (Optional) Finding the total sum similarity of a matching
 	
 	To find the total sum similarity of an outputted matching, run the command line: python3 ./TPMS_score_from_assignment.py [name].npz output_bvn.txt
