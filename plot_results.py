@@ -48,6 +48,23 @@ def plotC(obj, dataset): # institution experiment
     plt.show()
     plt.close()
 
+def plotD(obj, dataset): # numpap
+    if obj == "0":
+        data = np.load("D_0_" + dataset + ".npy")
+        ylab = "Sum-similarity objective (% of optimal)"
+    elif obj == "1":
+        data = np.load("D_1_" + dataset + ".npy")
+        ylab = "Fairness objective (% of optimal)"
+    print(data)
+    plt.plot(data[0], data[1], label="Our Algorithm", color='red') # our algo
+    plt.plot(data[0], data[2], label="Random Removal Baseline", color='black', linestyle='--') # aaai algo
+    plt.xlabel("Number of papers")
+    plt.ylabel(ylab)
+    plt.legend()
+    plt.savefig('D_' + obj + '_' + dataset + '.png')
+    plt.show()
+    plt.close()
+
 def main():
     if sys.argv[1] == 'A':
         plotA(sys.argv[2], sys.argv[3])
@@ -55,6 +72,9 @@ def main():
         plotB()
     elif sys.argv[1] == 'C':
         plotC(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == 'D':
+        plotD(sys.argv[2], sys.argv[3])
+
 
 if __name__ == "__main__":
     main()

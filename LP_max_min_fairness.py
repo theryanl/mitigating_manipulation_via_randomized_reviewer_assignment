@@ -9,7 +9,6 @@ upper_bound = int(sys.argv[2]) #upper bound on all matchings (multiplied by 100)
 k = int(sys.argv[3]) #k is the upper bound for papers per reviewer
 l = int(sys.argv[4]) #l is the number of reviewers per paper
 
-
 start_time = time.time()
 file = open("output.txt", "w")
 
@@ -102,7 +101,10 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             #each paper gets exactly l reviews
         
         model.optimize()
-        
+
+        # TODO TEMP write dummy institutions to file
+        for v in range(n):
+            file.write("0\n")
         for v in model.getVars():
             name = v.varName
             value = v.x

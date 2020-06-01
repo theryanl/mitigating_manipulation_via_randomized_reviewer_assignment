@@ -13,4 +13,13 @@ def generate_concentrated_expertise_dataset():
     M = np.zeros((numrev, numpap))
     np.savez("concentrated_expertise_dataset.npz", similarity_matrix=S.tolist(), mask_matrix=M.tolist())
 
-generate_concentrated_expertise_dataset()
+def generate_deterministic_concentrated_expertise_dataset(n):
+    S = np.zeros((n, n))
+    for i in range(0, n, 6):
+        stop = min(i+6, n)
+        S[i:stop, i:stop] = 1
+    M = np.zeros((n, n))
+    np.savez("det_concentrated_expertise_dataset.npz", similarity_matrix=S.tolist(), mask_matrix=M.tolist())
+
+
+#generate_concentrated_expertise_dataset()
