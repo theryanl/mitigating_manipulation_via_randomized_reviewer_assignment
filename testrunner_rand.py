@@ -47,6 +47,7 @@ if (type == 0):
         avg_runtimes.append(avg)
         stderrs.append(calculate_standard_error(times, avg, num_trials))
         print(avg)
+        np.save("B.npy", [size_list, avg_runtimes, stderrs])
           
 elif (type == 1):
     print("not yet implemented")
