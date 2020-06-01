@@ -106,7 +106,9 @@ def solve_fractional_LP(similarity_matrix, mask_matrix, assignment_matrix, n, d)
             #each paper gets exactly l reviews
         
         model.optimize()
-        
+
+        for v in range(n):
+            file.write("1\n")
         for v in model.getVars():
             name = v.varName
             value = v.x

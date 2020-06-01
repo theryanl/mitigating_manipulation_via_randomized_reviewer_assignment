@@ -3,6 +3,8 @@ import os
 import numpy as np
 import time
 from get_paper_totals import get_paper_totals
+from std_error import calculate_standard_error 
+from check_det import check_det 
 
 start_time = time.time()
 
@@ -11,11 +13,15 @@ obj_type = int(sys.argv[2]) #type is 0 if TPMS, 1 if max min
 k = int(sys.argv[3]) #k is the upper bound for papers per reviewer
 l = int(sys.argv[4]) #l is the number of reviewers per paper
 
+os.system("g++ -lm bvn.cpp") #compiles the bvn portion
+
 Q_values = []
 Q_results = []
+Q_stderrs = []
 AAAI_results = []
+AAAI_stderrs = []
 
-num_trials = 100
+num_trials = 10
 
 if (obj_type == 0):
     for Q in range(10, 110, 10):
@@ -24,29 +30,60 @@ if (obj_type == 0):
         
         #getting result for Q
         Q_result = os.popen(f"python3 ./LP_TPMS.py {my_dataset} {Q} {k} {l}")
-        TPMS_score = float((Q_result.readlines())[-2]) #the objective value
-        Q_results.append(TPMS_score)
-        print(TPMS_score)
-        
+        lines = Q_result.readlines()
+        try:
+            TPMS_score = float(lines[-2]) #the objective value
+            print("actual", TPMS_score)
+        except ValueError:
+            TPMS_score = -1
+            #print("infeasible")
+
+        if TPMS_score != -1: # if feasible
+            scores = []
+            for i in range(num_trials):
+                os.system("./a.out < output.txt > output_bvn.txt")
+                bvn_result = os.popen(f"python3 ./TPMS_score_from_assignment.py {my_dataset} output_bvn.txt")
+                x = float(bvn_result.readline())
+                scores.append(x)
+            s = sum(scores) / num_trials
+            Q_results.append(s)
+            Q_stderrs.append(calculate_standard_error(scores, s, num_trials))
+            print("estimate:", s)
+        else:
+            s = -1 # signal infeasible
+            Q_results.append(s)
+            Q_stderrs.append(s)
+
+       
         #getting results for AAAI
-        summ = 0
-        count_infeas = 0
-        
+        scores = []
+        count_infeasible = 0
         for i in range(num_trials):
             AAAI_result = os.popen(f"python3 ./AAAI_TPMS.py {my_dataset} {Q/100} {k} {l}")
-            x = (AAAI_result.readlines())[-2]
+            lines = AAAI_result.readlines()
             try:
-                AAAI_score = float(x)#float((AAAI_result.readlines())[-2]) 
+                TPMS_score = float(lines[-2]) #the objective value
+                print("aaai actual", TPMS_score)
             except ValueError:
-                AAAI_score = 0
-                count_infeas += 1
-                print("infeasible assignment")
-            #the objective value
-            summ += AAAI_score
-            
-        avg = summ/(num_trials - count_infeas)
-        AAAI_results.append(avg)
-        print(avg)
+                TPMS_score = -1
+                count_infeasible += 1
+                #print("infeasible")
+
+            if TPMS_score != -1: # feasible
+                os.system("./a.out < output.txt > output_bvn.txt")
+                bvn_result = os.popen(f"python3 ./TPMS_score_from_assignment.py {my_dataset} output_bvn.txt")
+                x = float(bvn_result.readline())
+                scores.append(x)
+        if num_trials == count_infeasible: # all infeasible
+            s = -1
+            AAAI_results.append(s)
+            AAAI_stderrs.append(-1)
+        else:
+            s = sum(scores) / (num_trials - count_infeasible)
+            AAAI_results.append(s)
+            AAAI_stderrs.append(calculate_standard_error(scores, s, num_trials - count_infeasible))
+            print("aaai estimate:", s)
+
     
     
 elif (obj_type == 1):
@@ -56,36 +93,67 @@ elif (obj_type == 1):
         
         #getting result for Q
         Q_result = os.popen(f"python3 ./LP_max_min_fairness.py {my_dataset} {Q} {k} {l}")
-        max_min_fairness = float((Q_result.readlines())[-2]) #the objective value
-        Q_results.append(max_min_fairness)
-        print(max_min_fairness)
+        lines = Q_result.readlines()
+        try:
+            max_min_fairness = float(lines[-2]) #the objective value
+            print("actual", max_min_fairness)
+        except ValueError:
+            max_min_fairness = -1
+            print("infeasible")
+
+        if max_min_fairness != -1: # if feasible
+            scores = []
+            for i in range(num_trials):
+                os.system("./a.out < output.txt > output_bvn.txt")
+                bvn_result = os.popen(f"python3 ./max_min_fairness_from_assignment.py {my_dataset} output_bvn.txt")
+                fair = float(bvn_result.readline())
+                scores.append(fair)
+            s = sum(scores) / num_trials
+            Q_results.append(s)
+            Q_stderrs.append(calculate_standard_error(scores, s, num_trials))
+            print("estimate:", s)
+        else:
+            s = -1 # signal infeasible
+            Q_results.append(s)
+            Q_stderrs.append(s)
+
         
         #getting results for AAAI
-        #summ = 0
-        paper_totals_list = [] 
+        scores = []
+        count_infeasible = 0
         for i in range(num_trials):
             AAAI_result = os.popen(f"python3 ./AAAI_max_min_fairness.py {my_dataset} {Q/100} {k} {l}")
-            AAAI_score = float((AAAI_result.readlines())[-2]) 
-            #the objective value
-            #summ += AAAI_score
-            #file.write(f"{name} {value}\n")
+            lines = AAAI_result.readlines()
+            try:
+                max_min_fairness = float(lines[-2]) #the objective value
+                print("actual", max_min_fairness)
+            except ValueError:
+                max_min_fairness = -1
+                count_infeasible += 1
+                print("infeasible")
 
-            # calculate expected total similarity for each paper
-            paper_totals_list.append(get_paper_totals("output.txt", my_dataset))
-        # average together and take min
-        avg_paper_totals = sum(paper_totals_list) / num_trials
-        avg = np.min(avg_paper_totals)
-            
-        #avg = summ/10
-        AAAI_results.append(avg)
-        print(avg)
-        
-        
+            if max_min_fairness != -1: # feasible
+                os.system("./a.out < output.txt > output_bvn.txt")
+                bvn_result = os.popen(f"python3 ./max_min_fairness_from_assignment.py {my_dataset} output_bvn.txt")
+                fair = float(bvn_result.readline())
+                scores.append(fair)
+        if num_trials == count_infeasible: # all infeasible
+            s = -1
+            AAAI_results.append(s)
+            AAAI_stderrs.append(-1)
+        else:
+            s = sum(scores) / (num_trials - count_infeasible)
+            AAAI_results.append(s)
+            AAAI_stderrs.append(calculate_standard_error(scores, s, num_trials - count_infeasible))
+            print("aaai estimate:", s)
+
 print("Q_values:", Q_values)
 print("Q_results:", Q_results)
 print("AAAI_results:", AAAI_results)
+print("Q_stderrs:", Q_stderrs)
+print("AAAI_stderrs:", AAAI_stderrs)
 dataset_name = my_dataset.split('.')[0]
 name = "A_" + str(obj_type) + "_" + dataset_name + ".npy"
-np.save(name, [Q_values, Q_results, AAAI_results])
+np.save(name, [Q_values, Q_results, AAAI_results, Q_stderrs, AAAI_stderrs])
 
 print("time taken", time.time() - start_time)

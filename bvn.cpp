@@ -325,7 +325,7 @@ int main()
         ++x;
         ++y;
 
-        if(strlen(sz) <= 2) z = one * (sz[0] == '1');
+        if(strlen(sz) <= 2 || sz[0] == '1') z = one * (sz[0] == '1');
         else
         {
             sz[dig + 2] = 0;
@@ -341,6 +341,8 @@ int main()
             ae(y, x, one - z);
 
             ai(y, ri[x], z);
+
+            cnr(tot);
         }
     }
 
@@ -362,14 +364,6 @@ int main()
             if(go(i, 0, 0)) break;
         }
     }
-
-    int count = 0;
-
-    for(int i = 2; i <= tot; i++)
-        if(u[i] < v[i] && f[i] == one)
-            count += 1;
-
-    printf("%d\n", count);
 
     for(int i = 2; i <= tot; i++)
         if(u[i] < v[i] && f[i] == one)

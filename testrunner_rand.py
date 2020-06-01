@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 import time
+from std_error import calculate_standard_error
 
 overall_start_time = time.time()
 
@@ -13,33 +14,38 @@ start_size = int(sys.argv[5])
 end_size = int(sys.argv[6]) #end size is also run (inclusive upper bound)
 step_size = int(sys.argv[7])
 
+num_trials = 10
+
 os.system("g++ -lm bvn.cpp") #compiles the bvn portion
 
 size_list = []
 avg_runtimes = []
+stderrs = []
 
 if (type == 0):
     for size in range(start_size, end_size + step_size, step_size):
         size_list.append(size)
         print(f"running size = {size}...")
         
-        summ = 0
+        times = []
         
-        for i in range(10):
+        for i in range(num_trials):
             start_time = time.time()
             result = os.popen(f"python3 ./rand_LP_output.py {Q} {size} {k} {l}")
             lines = result.readlines()
-            if (ord((lines[-4])[0]) == 73):
-                #infeasible model
-                print(f"infeasible model for size = {size} in run {i}")
-            
-            os.system("./a.out < rand_output.txt > rand_output_bvn.txt")
-            
+            try:
+                TPMS_score = float(lines[-2]) #the objective value
+                print("actual", TPMS_score)
+            except ValueError:
+                TPMS_score = -1
+            if TPMS_score != -1: # if feasible
+                os.system("./a.out < rand_output.txt > rand_output_bvn.txt")
             runtime = time.time() - start_time
-            summ += runtime
+            times.append(runtime)
         
-        avg = summ/10
+        avg = sum(times)/num_trials
         avg_runtimes.append(avg)
+        stderrs.append(calculate_standard_error(times, avg, num_trials))
         print(avg)
           
 elif (type == 1):
@@ -47,6 +53,7 @@ elif (type == 1):
     
 print("sizes:", size_list)
 print("avg_runtimes:", avg_runtimes)
-np.save("testrunner_rand_results", [size_list, avg_runtimes])
+print("stderrs:", stderrs)
+np.save("B.npy", [size_list, avg_runtimes, stderrs])
 
 print("time taken", time.time() - overall_start_time)

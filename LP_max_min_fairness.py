@@ -102,9 +102,8 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
         
         model.optimize()
 
-        # TODO TEMP write dummy institutions to file
         for v in range(n):
-            file.write("0\n")
+            file.write("1\n")
         for v in model.getVars():
             name = v.varName
             value = v.x
