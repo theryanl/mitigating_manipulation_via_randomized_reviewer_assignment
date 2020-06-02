@@ -32,3 +32,19 @@ The second step takes the output and converts the fractional solution to a integ
 	To find the total sum similarity of an outputted matching, run the command line: python3 ./TPMS_score_from_assignment.py [name].npz output_bvn.txt
 
 	To find the total sum similarity if there were no constraints on the matchings, run ONLY the first step with U = 100. The second-to-last line of the console output will report the optimal objective, which is what is desired.
+
+Experiments in the paper
+
+	The experiments in the paper can be re-run with the following commands:
+	- python testrunner.py iclr2018.npz 0 6 3
+	- python testrunner.py preflib1.npz 0 6 3
+	- python testrunner.py preflib2.npz 0 7 3
+	- python testrunner.py preflib3.npz 0 6 3
+	- python testrunner.py iclr2018.npz 1 6 3
+	- python testrunner.py preflib1.npz 1 6 3
+	- python testrunner.py preflib2.npz 1 7 3
+	- python testrunner.py preflib3.npz 1 6 3
+	- python testrunner_rand.py 0.5 0 3 3 500 5000 500
+	- python testrunnerC.py iclr2018.npz 0 6 3 15
+	- python testrunnerD.py
+	The graphs can then be plotted from the saved data using functions in plot_results.py.
