@@ -12,7 +12,7 @@ def plotA(obj, dataset): # Q vs objective experiment
         opt_obj = max(np.max(data[1]), np.max(data[2]))
         feasible_baseline = data[2] >= 0
         feasible_ours = data[1] >= 0
-        plt.errorbar(data[0, feasible_ours], data[1, feasible_ours]/opt_obj, yerr=data[3, feasible_ours]/opt_obj, label="Our Algorithm", color='red', linewidth=3) # our algo
+        plt.errorbar(data[0, feasible_ours], data[1, feasible_ours]/opt_obj, yerr=data[3, feasible_ours]/opt_obj, label="Our Algorithm", color='red', linewidth=3, marker = '.', ms=20) # our algo
     elif obj == "1": # data = [q_values, our_algo_objectives, [], [], []]
         data = np.load("A_1_" + dataset + ".npy", allow_pickle=True)
         ylab = "Fairness (% of optimal)"
@@ -22,28 +22,28 @@ def plotA(obj, dataset): # Q vs objective experiment
             l.append(data[i])
         data = np.array(l)
         feasible_ours = data[1] >= 0
-        plt.errorbar(data[0, feasible_ours], data[1, feasible_ours]/opt_obj, label="Our Algorithm", color='red', linewidth=3) # our algo
-    #plt.errorbar(data[0, feasible_baseline], data[2, feasible_baseline]/opt_obj, yerr=data[4, feasible_baseline]/opt_obj, label="Random Removal Baseline", color='black', linestyle='--') # aaai algo
+        plt.errorbar(data[0, feasible_ours], data[1, feasible_ours]/opt_obj, label="Our Algorithm", color='red', linewidth=3, marker = '.', ms=20) # our algo
+    #plt.errorbar(data[0, feasible_baseline], data[2, feasible_baseline]/opt_obj, yerr=data[4, feasible_baseline]/opt_obj, label="Random Removal Baseline", color='black', linestyle='--') # baseline algo
     plt.xlabel("Maximum probability of each assignment")
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     #plt.legend()
     plt.tight_layout()
     plt.savefig('A_' + obj + '_' + dataset + '.png')
-    plt.show()
+    #plt.show()
     plt.close()
 
 def plotB(): # runtime experiment
     # data = [sizes, avg_runtimes, std_err]
     data = np.load("B.npy")
     plt.rcParams.update({'font.size': fontsize})
-    plt.errorbar(data[0], data[1], yerr=data[2], color='red', linewidth=3)
+    plt.errorbar(data[0], data[1], yerr=data[2], color='red', linewidth=3, marker = '.', ms=20)
     plt.xlabel("Problem size")
     plt.ylabel("Runtime (sec)")
     plt.ylim(bottom=0)
     plt.tight_layout()
     plt.savefig('B.png')
-    plt.show()
+    #plt.show()
     plt.close()
 
 def plotC(obj, dataset): # institution experiment
@@ -62,14 +62,14 @@ def plotC(obj, dataset): # institution experiment
 
     feasible_ours = data[1] >= 0 
     plt.rcParams.update({'font.size': fontsize})
-    plt.errorbar(data[0, feasible_ours], data[1, feasible_ours]/opt_obj, xerr=data[2, feasible_ours],  yerr=data[3, feasible_ours]/opt_obj, label="Our Algorithm", color='red', linewidth=3) # our algo
+    plt.errorbar(data[0, feasible_ours], data[1, feasible_ours]/opt_obj, xerr=data[2, feasible_ours],  yerr=data[3, feasible_ours]/opt_obj, label="Our Algorithm", color='red', linewidth=3, marker = '.', ms=20) # our algo
     plt.xlabel("Number of same-institution reviewer pairs")
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
-    plt.legend()
+    #plt.legend()
     plt.tight_layout()
     plt.savefig('C_' + obj + '_' + dataset + '.png')
-    plt.show()
+    #plt.show()
     plt.close()
 
 def plotD(obj, dataset): # community model experiment
@@ -82,7 +82,7 @@ def plotD(obj, dataset): # community model experiment
     feasible_ours = data[1] >= 0
     feasible_baseline = data[2] >= 0
     plt.rcParams.update({'font.size': fontsize})
-    plt.errorbar(data[0, feasible_ours], data[1, feasible_ours], yerr=data[3, feasible_ours], label="Our Algorithm", color='red', linewidth=3) # our algo
+    plt.errorbar(data[0, feasible_ours], data[1, feasible_ours], yerr=data[3, feasible_ours], label="Our Algorithm", color='red', linewidth=3, marker = '.', ms=20) # our algo
     #plt.errorbar(data[0, feasible_baseline], data[2, feasible_baseline], yerr=data[4, feasible_baseline], label="Random Removal Baseline", color='black', linestyle='--') # baseline algo
     plt.xlabel("Number of papers")
     plt.ylabel(ylab)
@@ -90,7 +90,7 @@ def plotD(obj, dataset): # community model experiment
     #plt.legend()
     plt.tight_layout()
     plt.savefig('D_' + obj + '_' + dataset + '.png')
-    plt.show()
+    #plt.show()
     plt.close()
 
 def main():
