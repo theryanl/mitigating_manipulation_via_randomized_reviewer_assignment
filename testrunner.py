@@ -4,7 +4,6 @@ import numpy as np
 import time
 from get_paper_totals import get_paper_totals
 from std_error import calculate_standard_error 
-from check_det import check_det 
 
 start_time = time.time()
 
@@ -102,6 +101,8 @@ elif (obj_type == 1):
             print("infeasible")
 
         if max_min_fairness != -1: # if feasible
+            Q_results.append(max_min_fairness)
+            '''
             scores = []
             for i in range(num_trials):
                 os.system("./a.out < output.txt > output_bvn.txt")
@@ -112,12 +113,14 @@ elif (obj_type == 1):
             Q_results.append(s)
             Q_stderrs.append(calculate_standard_error(scores, s, num_trials))
             print("estimate:", s)
+            '''
         else:
             s = -1 # signal infeasible
             Q_results.append(s)
-            Q_stderrs.append(s)
+            #Q_stderrs.append(s)
 
         
+        '''
         #getting results for AAAI
         scores = []
         count_infeasible = 0
@@ -146,6 +149,7 @@ elif (obj_type == 1):
             AAAI_results.append(s)
             AAAI_stderrs.append(calculate_standard_error(scores, s, num_trials - count_infeasible))
             print("aaai estimate:", s)
+        '''
 
 print("Q_values:", Q_values)
 print("Q_results:", Q_results)

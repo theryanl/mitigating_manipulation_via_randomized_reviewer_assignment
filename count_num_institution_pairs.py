@@ -2,8 +2,8 @@ import numpy as np
 import sys
 
 def count_num_institution_pairs(assignment, inst_file):
-    inst_data = np.load(inst_file, allow_pickle=True)
-    insts = inst_data[1:] # drop number of institutions entry
+    inst_data = np.load(inst_file)
+    insts = inst_data['institution_list'] # drop number of institutions entry
     
     reviewers = len(insts)
 
@@ -19,7 +19,10 @@ def count_num_institution_pairs(assignment, inst_file):
             r = int(tmp[0])
             p = int(tmp[1]) - reviewers
             i = int(insts[r])
-            count_insts[(p, i)] += 1
+            if (p, i) in count_insts:
+                count_insts[(p, i)] += 1
+            else:
+                count_insts[(p, i)] = 1
     
     count = 0
     for val in count_insts.values():

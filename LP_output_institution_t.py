@@ -15,11 +15,14 @@ institution_pkg = np.load(institution_file)
 num_institutions = int(institution_pkg["num_institutions"])
 institution_list = institution_pkg["institution_list"]
 #institution_list is a 1D list with index corresponding to reviewer
+print(institution_list)
 
-I = [[]] * num_institutions #num_institution empty lists
+I = []#num_institution empty lists
+for i in range(num_institutions):
+    I.append([])
 for rev in range(len(institution_list)):
     institution = institution_list[rev]
-    I[institution].append(rev)
+    I[institution-1].append(rev)
 
 start_time = time.time()
 file = open("output.txt", "w")
@@ -116,10 +119,11 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             
             for institution in range(num_institutions):
                 institution_reviewers = 0
-                for reviewer in I[institution]:
+                for reviewer in I[institution-1]:
                     institution_reviewers += assignment_matrix[reviewer][paper]
                 model.addConstr(institution_reviewers <= T)
                 #each paper has at most T reviews from any given institution
+
                 
         model.optimize()
         
@@ -131,6 +135,8 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             value = v.x
             file.write(f"{name} {value}\n")
             #writes the matching along with its fractional weight to the output.
+        print(model.objVal)
+
     
     except gp.GurobiError as e:
         print("Error code " + str(e.errno) + ": " + str(e))
