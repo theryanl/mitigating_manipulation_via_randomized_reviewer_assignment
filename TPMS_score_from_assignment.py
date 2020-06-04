@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 
-# part of this are referenced from https://github.com/xycforgithub/StrategyProof_Conference_Review
+# part of this is referenced from https://github.com/xycforgithub/StrategyProof_Conference_Review
 my_dataset = sys.argv[1] #dataset
 assignment = sys.argv[2] #integral assignment
 

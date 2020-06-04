@@ -38,11 +38,9 @@ def get_output():
     
 
 def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n, d):
-#takes as input all the information of the assignment problem, constructs an LP,
-#and uses Gurobi to solve the LP.
+#takes as input all the information of the assignment problem, constructs an LP, and uses Gurobi to solve the LP.
 
-#this function was created with reference to the Gurobi quickstart guide for mac
-#on their website.
+#this function was created with reference to the Gurobi quickstart guide for mac on their website.
     
     try:
         
@@ -100,13 +98,16 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
         
         for v in range(n):
             file.write("1\n")
+            #This file does not account for different institutions
+            #so to fit it with our bvn program parsing we have everyone set to institution 1.
+            
         for v in model.getVars():
             name = v.varName
             value = v.x
             file.write(f"{name} {value}\n")
             #writes the matching along with its fractional weight to the output.
         
-        print(model.objVal)
+        print(model.objVal) #the objective value
     
     except gp.GurobiError as e:
         print("Error code " + str(e.errno) + ": " + str(e))

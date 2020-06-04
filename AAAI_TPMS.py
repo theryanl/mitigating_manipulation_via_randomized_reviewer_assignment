@@ -5,8 +5,11 @@ import time
 import sys
 import random
 
+""" the AAAI method uses a constraint where they make each reviewer only
+    able to be assigned to random smaller fraction of all the papers"""
+
 my_filename = sys.argv[1] #npz containing similarity matrix and conflict matrix
-p = float(sys.argv[2]) #probability that a paper has no conflict
+p = float(sys.argv[2]) #probability that a paper has no conflict, between 0 and 1
 k = int(sys.argv[3]) #k is the upper bound for papers per reviewer
 l = int(sys.argv[4]) #l is the number of reviewers per paper
 
@@ -14,6 +17,7 @@ start_time = time.time()
 file = open("output.txt", "w")
 
 def add_random_conflicts(M, num_conflicts, n, d):
+# adds num_conflicts 1's to every row of the mask matrix
     for reviewer in range(n):
         L = random.sample(range(d), num_conflicts)
         for conflict in L:
@@ -21,8 +25,9 @@ def add_random_conflicts(M, num_conflicts, n, d):
     return M
 
 def get_output():
-# get_output disassembles the npz, finds number of reviewers & papers, and 
-# calls solve_fractional_LP to finish the job.
+# get_output disassembles the npz, finds number of reviewers & papers,
+# adds conflicts to the mask matrix according to the AAAI method, and
+# calls solve_fractional_LP to create and solve the LP formulation.
 
 # parts of this function are referenced from https://github.com/xycforgithub/StrategyProof_Conference_Review
 
@@ -35,7 +40,7 @@ def get_output():
     n = len(S) #number of reviewers
     d = len(S[0]) #number of papers
     
-    papers_available = int((d * p)//1)
+    papers_available = int((d * p)//1) #number of papers a reviewer is able to be assigned to.
     updated_M = add_random_conflicts(M, d - papers_available, n, d)
     
     file.write(f"{n} {d}\n")
@@ -48,11 +53,9 @@ def get_output():
     
 
 def solve_fractional_LP(similarity_matrix, mask_matrix, assignment_matrix, n, d):
-#takes as input all the information of the assignment problem, constructs an LP,
-#and uses Gurobi to solve the LP.
+#takes as input all the information of the assignment problem, constructs an LP, and uses Gurobi to solve the LP.
 
-#this function was created with reference to the Gurobi quickstart guide for mac
-#on their website.
+#this function was created with reference to the Gurobi quickstart guide for mac on their website.
     
     try:
         
@@ -109,13 +112,16 @@ def solve_fractional_LP(similarity_matrix, mask_matrix, assignment_matrix, n, d)
 
         for v in range(n):
             file.write("1\n")
+            #This file does not account for different institutions
+            #so to fit it with our bvn program parsing we have everyone set to institution 1.
+        
         for v in model.getVars():
             name = v.varName
             value = v.x
             file.write(f"{name} {value}\n")
             #writes the matching along with its fractional weight to the output.
         
-        print(model.objVal)
+        print(model.objVal) #the objective value
     
     except gp.GurobiError as e:
         print("Error code " + str(e.errno) + ": " + str(e))

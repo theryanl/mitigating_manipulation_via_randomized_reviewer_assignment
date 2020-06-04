@@ -9,20 +9,22 @@ upper_bound = int(sys.argv[2]) #upper bound on all matchings (multiplied by 100)
 k = int(sys.argv[3]) #k is the upper bound for papers per reviewer
 l = int(sys.argv[4]) #l is the number of reviewers per paper
 institution_file = sys.argv[5] #npz containing institution list (index = reviewer)
-T = float(sys.argv[6]) #upper bound on reviews from the same institution
+T = float(sys.argv[6]) #upper bound on reviews from the same institution, note this is not multiplied by 100
 
 institution_pkg = np.load(institution_file)
 num_institutions = int(institution_pkg["num_institutions"])
 institution_list = institution_pkg["institution_list"]
 #institution_list is a 1D list with index corresponding to reviewer
-print(institution_list)
 
-I = []#num_institution empty lists
+I = []
 for i in range(num_institutions):
     I.append([])
+#num_institution empty lists, used to store reviewers from each institution
+
 for rev in range(len(institution_list)):
     institution = institution_list[rev]
     I[institution-1].append(rev)
+#adding reviewers to their institution bucket
 
 start_time = time.time()
 file = open("output.txt", "w")
@@ -45,8 +47,6 @@ def get_output():
     file.write(f"{n} {d}\n")
     #output has "num_reviewers num_papers" as its first line
     
-    #file.write(f"{num_institutions}\n")
-    
     A = [([0] * d) for i in range(n)] 
     #creates n x d matrix of 0's to represent assignment
     
@@ -54,11 +54,9 @@ def get_output():
     
 
 def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n, d):
-#takes as input all the information of the assignment problem, constructs an LP,
-#and uses Gurobi to solve the LP.
+#takes as input all the information of the assignment problem, constructs an LP, and uses Gurobi to solve the LP.
 
-#this function was created with reference to the Gurobi quickstart guide for mac
-#on their website.
+#this function was created with reference to the Gurobi quickstart guide for mac on their website.
     
     try:
         
@@ -89,7 +87,6 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
         
     
         model.setObjective(obj, GRB.MAXIMIZE) #telling Gurobi to maximize obj
-        print("before constraints")
         
         for i in range(n):
             papers = 0
@@ -113,9 +110,7 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             model.addConstr(reviewers == l)
             #each paper gets exactly l reviews
         
-        print("before special constraints")
         for paper in range(d):
-            if (paper % 10 == 0): print(f"done with paper {paper}")
             
             for institution in range(num_institutions):
                 institution_reviewers = 0
@@ -123,8 +118,7 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
                     institution_reviewers += assignment_matrix[reviewer][paper]
                 model.addConstr(institution_reviewers <= T)
                 #each paper has at most T reviews from any given institution
-
-                
+        
         model.optimize()
         
         for item in institution_list:
@@ -135,9 +129,8 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             value = v.x
             file.write(f"{name} {value}\n")
             #writes the matching along with its fractional weight to the output.
-        print(model.objVal)
+        print(model.objVal) #objective value (TPMS score)
 
-    
     except gp.GurobiError as e:
         print("Error code " + str(e.errno) + ": " + str(e))
         
@@ -152,6 +145,5 @@ print("time taken:", time_taken)
 
 ## Output file is of the form:
 #  num_reviewers num_papers
-#  num_institutions
 #  num_reviewers lines of institutions (index = reviewer)
 #  num_reviewers*num_papers lines of fractional matching weights
