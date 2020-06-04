@@ -47,13 +47,16 @@ def plotB(): # runtime experiment
     plt.close()
 
 def plotC(obj, dataset): # institution experiment
+
+### Note: When running plotC, set obj to be 0
+
     # data = [number_same-institution_pairs, our_algo_objectives, std_err_pairs, std_err_obj, opt_obj]
     if obj == "0":
         data = np.load("C_0_" + dataset + ".npy", allow_pickle=True)
         ylab = "Sum-similarity (% of optimal)"
-    elif obj == "1":
-        data = np.load("C_1_" + dataset + ".npy", allow_pickle=True)
-        ylab = "Fairness (% of optimal)"
+    # elif obj == "1":
+    #     data = np.load("C_1_" + dataset + ".npy", allow_pickle=True)
+    #     ylab = "Fairness (% of optimal)"
     opt_obj = data[-1]
     l = []
     for i in range(4):
@@ -99,6 +102,7 @@ def main():
     elif sys.argv[1] == 'B':
         plotB()
     elif sys.argv[1] == 'C':
+    ## Note: When running plotC, set obj to be 0
         plotC(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'D':
         plotD(sys.argv[2], sys.argv[3])
