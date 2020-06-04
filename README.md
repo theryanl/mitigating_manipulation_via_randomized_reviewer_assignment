@@ -46,6 +46,9 @@ Experiments in the paper
 	- python testrunner.py preflib3.npz 1 6 3
 	- python testrunner_rand.py 0.5 0 3 3 500 5000 500
 	- python testrunnerC.py iclr2018.npz 0 6 3 15
+	- python testrunnerC.py iclr2018.npz 0 6 3 811
 	- python testrunnerC.py preflib1.npz 0 6 3 11
+	- python testrunnerC.py preflib2.npz 0 7 3 8
+	- python testrunnerC.py preflib3.npz 0 6 3 48
 	- python testrunnerD.py
 	The graphs can then be plotted from the saved data using functions in plot_results.py.
