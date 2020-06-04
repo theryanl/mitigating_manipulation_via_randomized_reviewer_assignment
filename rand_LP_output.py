@@ -5,8 +5,10 @@ import time
 import random
 import sys
 
+""" Runs the normal TPMS objective LP with a randomly generated nxn similarity matrix"""
+
 Q = float(sys.argv[1]) #upper bound probability of matching
-size = int(sys.argv[2])
+size = int(sys.argv[2]) #side length of similarity matrix
 k = int(sys.argv[3]) #k is the upper bound for papers per reviewer
 l = int(sys.argv[4]) #l is the number of reviewers per paper
 
@@ -63,6 +65,7 @@ def TPMS_score(Q, similarity_matrix, mask_matrix, assignment_matrix, n, d):
         #ICLR under LP from section 4
         
         gp.setParam("NodefileStart", 0.5)
+        ## runs it with less memory usage on higher sized matrices. You can remove this line if you want.
         
         obj = 0
         
@@ -77,13 +80,14 @@ def TPMS_score(Q, similarity_matrix, mask_matrix, assignment_matrix, n, d):
                     
                 else:
                     v = model.addVar(lb = 0, ub = Q, name = f"{i} {padded_j}")
+                    #upper bound for the weight of the matching is Q
                     
                 assignment_matrix[i][j] = v
                 
                 obj += v * similarity_matrix[i][j]
         
     
-        model.setObjective(obj, GRB.MAXIMIZE)
+        model.setObjective(obj, GRB.MAXIMIZE) #telling Gurobi to maximize obj
         
         for i in range(n):
             papers = 0
@@ -91,6 +95,7 @@ def TPMS_score(Q, similarity_matrix, mask_matrix, assignment_matrix, n, d):
                 papers += assignment_matrix[i][j]
                 
             model.addConstr(papers <= k)
+            #each reviewer has k or less papers to review
         
         for j in range(d):
             reviewers = 0
@@ -98,15 +103,18 @@ def TPMS_score(Q, similarity_matrix, mask_matrix, assignment_matrix, n, d):
                 reviewers += assignment_matrix[i][j]
             
             model.addConstr(reviewers == l)
+            #each paper gets exactly l reviews
         
         model.optimize()
         
-        for v in model.getVars():
+        for v in model.getVars(): 
+            #fitting to the institution template was done earlier in the code
             name = v.varName
             value = v.x
             file2.write(f"{name} {value}\n")
             if (value != 0):
                 file1.write(f"{name} {value}\n")
+                #writes the matching along with its fractional weight to the output.
     
     except gp.GurobiError as e:
         print("Error code " + str(e.errno) + ": " + str(e))

@@ -36,19 +36,16 @@ The second step takes the output and converts the fractional solution to a integ
 Experiments in the paper
 
 	The experiments in the paper can be re-run with the following commands:
-	- python testrunner.py iclr2018.npz 0 6 3
-	- python testrunner.py preflib1.npz 0 6 3
-	- python testrunner.py preflib2.npz 0 7 3
-	- python testrunner.py preflib3.npz 0 6 3
-	- python testrunner.py iclr2018.npz 1 6 3
-	- python testrunner.py preflib1.npz 1 6 3
-	- python testrunner.py preflib2.npz 1 7 3
-	- python testrunner.py preflib3.npz 1 6 3
-	- python testrunner_rand.py 0.5 0 3 3 500 5000 500
-	- python testrunnerC.py iclr2018.npz 0 6 3 15
-	- python testrunnerC.py iclr2018.npz 0 6 3 811
-	- python testrunnerC.py preflib1.npz 0 6 3 11
-	- python testrunnerC.py preflib2.npz 0 7 3 8
-	- python testrunnerC.py preflib3.npz 0 6 3 48
-	- python testrunnerD.py
+	- python3 testrunner.py iclr2018.npz 0 6 3
+	- python3 testrunner.py preflib1.npz 0 6 3
+	- python3 testrunner.py preflib2.npz 0 7 3
+	- python3 testrunner.py preflib3.npz 0 6 3
+	- python3 testrunner.py iclr2018.npz 1 6 3
+	- python3 testrunner.py preflib1.npz 1 6 3
+	- python3 testrunner.py preflib2.npz 1 7 3
+	- python3 testrunner.py preflib3.npz 1 6 3
+	- python3 testrunner_rand.py 0.5 3 3 500 5000 500
+	- python3 testrunnerC.py iclr2018.npz 6 3 15
+	- python3 testrunnerC.py preflib1.npz 6 3 11
+	- python3 testrunnerD.py
 	The graphs can then be plotted from the saved data using functions in plot_results.py.

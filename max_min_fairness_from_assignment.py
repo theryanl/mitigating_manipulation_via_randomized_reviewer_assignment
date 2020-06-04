@@ -23,7 +23,7 @@ for pair in pairs_file.readlines():
     else:
         r = int(tmp[0])
         p = int(tmp[1]) - reviewers
-        paper_similarities[p] += S[r][p]
+        paper_similarities[p] += S[r][p] #add similarity to paper's total similarity
 
 lowest = paper_similarities[0]
 

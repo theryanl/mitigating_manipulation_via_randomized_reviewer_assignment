@@ -98,6 +98,11 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
         
         model.optimize()
         
+        for v in range(n):
+            file.write("1\n")
+            #This file does not account for different institutions
+            #so to fit it with our bvn program parsing we have everyone set to institution 1.
+            
         for v in model.getVars():
             name = v.varName
             value = v.x
