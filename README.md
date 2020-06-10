@@ -17,11 +17,11 @@ The first step creates a fractional solution to the LP and puts it in "output.tx
 
 	To maximize the sum-similarity and constrain the loads on each paper from each institution, run: python3 ./LP_output_institution_t.py [name].npz U K L I t
 	where I is an .npz file containing the number of institutions under keyword "num_institutions" and list of a positive integer ID for each reviewer's instutition in order under keyword "institution_list"
-	and t is the maximum load on each paper from each institution (set to 1 to prevent all pairs).
+	and t is the maximum load on each paper from each institution (set to 1 to prevent all same-institution reviewer pairs).
 
 	If you would like to change the upper bound probability on a specific pair of (paper, reviewer), or change the paper load for a reviewer, you could edit the code following the bolded corresponding comment.
 
-	The output, "output.txt", contains "[num_reviewers] [num_papers]" on the first line, followed by a list of institution IDs in order, followed by each possible pair and the weight assigned to that pair. Note that the indices of papers are padded by the number of reviewers for ease of distinction.
+	The output, "output.txt", contains "[num_reviewers] [num_papers]" on the first line, followed by a list of institution IDs in order (positive integers), followed by each possible reviewer-paper pair and the weight assigned to that pair. Note that the indices of papers are padded by the number of reviewers for ease of distinction. If no institutions were input, all reviewers are given institution ID 1.
 
 The second step takes the output and converts the fractional solution to a integral assignment. This 
 	portion requires C++.

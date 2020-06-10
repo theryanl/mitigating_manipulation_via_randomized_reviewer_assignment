@@ -1,6 +1,8 @@
 import numpy as np
 import sys
 
+# Counts the number of same-institution reviewers assigned to the same paper
+# in the given assignment
 def count_num_institution_pairs(assignment, inst_file):
     inst_data = np.load(inst_file)
     insts = inst_data['institution_list'] # drop number of institutions entry

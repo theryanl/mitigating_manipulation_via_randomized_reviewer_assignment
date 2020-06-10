@@ -6,6 +6,7 @@ from institution_generator import *
 
 # Quickly tests the runtime of the algorithms on the ICLR dataset
 
+# fixed parameters
 my_dataset = "data/iclr2018.npz"
 k = 6
 l = 3
@@ -14,6 +15,7 @@ t = 1
 
 os.system("g++ -lm ../core/bvn.cpp") #compiles the bvn portion
 
+# test for basic algorithm
 num_trials = 10
 runtimes = []
 for i in range(num_trials):
@@ -27,6 +29,7 @@ for i in range(num_trials):
 mean = sum(runtimes) / num_trials
 print("normal mean:", mean, runtimes)
 
+# test for institution algorithm
 num_trials = 10
 runtimes = []
 for i in range(num_trials):

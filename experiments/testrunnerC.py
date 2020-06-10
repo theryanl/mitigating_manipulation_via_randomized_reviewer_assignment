@@ -41,6 +41,7 @@ for t in np.linspace(1, 2, 11): #1.0, 1.1, 1.2, ..., 1.9, 2.0
     count_infeasible = 0
 
     for i in range(runs):
+        print("trial", i)
         generate_institutions_list(reviewers_per_institution, n)
         #generates random institution list based on reviewers per institution
         #for more details see the comments in institution_generator.py
@@ -74,7 +75,10 @@ for t in np.linspace(1, 2, 11): #1.0, 1.1, 1.2, ..., 1.9, 2.0
             x = float(bvn_result.readline())
             scores_list.append(x/opt)
             pairs = count_num_institution_pairs("output_bvn.txt", "institutions.npz") #counting the pairs of reviewers that belong to the same institution
-            pairs_list.append(pairs/opt_pairs) #normalize based on current institutions
+            if pairs == 0 and opt_pairs == 0:
+                pairs_list.append(1) #normalize based on current institutions
+            else:
+                pairs_list.append(pairs/opt_pairs)
 
     if runs == count_infeasible:
         avg_num_pairs.append(-1)

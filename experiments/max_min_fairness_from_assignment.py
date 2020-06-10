@@ -1,6 +1,8 @@
 import numpy as np
 import sys
 
+# Reads in an assignment file and outputs the fairness of this assignment
+
 # part of this are referenced from https://github.com/xycforgithub/StrategyProof_Conference_Review
 my_dataset = sys.argv[1] #dataset
 assignment = sys.argv[2] #integral assignment
