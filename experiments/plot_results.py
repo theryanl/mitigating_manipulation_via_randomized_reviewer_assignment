@@ -23,7 +23,7 @@ def legend():
     for i in range(4):
         plt.plot(np.arange(10), np.zeros(10), label=labels[i], color=colors[i], marker=markers[i], ms=markersize, linewidth=lw, linestyle=ls[i])
     plt.legend(ncol=4)
-    plt.savefig("legend_full.png")
+    plt.savefig("legend_full.pdf")
 
 # Plots the legend for the simulations
 def sim_legend():
@@ -31,7 +31,7 @@ def sim_legend():
     for i in range(4):
         plt.plot(np.arange(10), np.zeros(10), label=sim_labels[i], color=colors[i], marker=markers[i], ms=markersize, linewidth=lw, linestyle=ls[i])
     plt.legend(ncol=4)
-    plt.savefig("sim_legend_full.png")
+    plt.savefig("sim_legend_full.pdf")
 
 def plotA(obj): # Q vs objective experiment
     plt.rcParams.update({'font.size': fontsize})
@@ -61,7 +61,7 @@ def plotA(obj): # Q vs objective experiment
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
-    plt.savefig('A_' + obj + '.png')
+    plt.savefig('A_' + obj + '.pdf')
     plt.close()
 
 def plotB(): # runtime experiment on random data
@@ -73,7 +73,7 @@ def plotB(): # runtime experiment on random data
     plt.ylabel("Runtime (sec)")
     plt.ylim(bottom=0)
     plt.tight_layout()
-    plt.savefig('B.png')
+    plt.savefig('B.pdf')
     plt.close()
 
 def plotC(): # institution experiment for datasets
@@ -92,7 +92,7 @@ def plotC(): # institution experiment for datasets
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
-    plt.savefig('C.png')
+    plt.savefig('C.pdf')
     plt.close()
 
 def plotD(): # community model experiment, varied Q
@@ -110,7 +110,7 @@ def plotD(): # community model experiment, varied Q
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
-    plt.savefig('D.png')
+    plt.savefig('D.pdf')
     plt.close()
 
 def plotE(): # institution experiment, community model
@@ -125,7 +125,7 @@ def plotE(): # institution experiment, community model
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
-    plt.savefig('E.png')
+    plt.savefig('E.pdf')
     plt.close()
 
 def plotF(): # random data, varied Q experiment
@@ -138,7 +138,7 @@ def plotF(): # random data, varied Q experiment
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
-    plt.savefig('F.png')
+    plt.savefig('F.pdf')
     plt.close()
 
 
