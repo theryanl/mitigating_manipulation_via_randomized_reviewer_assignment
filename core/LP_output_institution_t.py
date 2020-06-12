@@ -5,11 +5,27 @@ import time
 import sys
 
 my_filename = sys.argv[1] #npz containing similarity matrix and conflict matrix
-upper_bound = int(sys.argv[2]) #upper bound on all matchings (multiplied by 100)
-k = int(sys.argv[3]) #k is the upper bound for papers per reviewer
-l = int(sys.argv[4]) #l is the number of reviewers per paper
-institution_file = sys.argv[5] #npz containing institution list (index = reviewer)
-T = float(sys.argv[6]) #upper bound on reviews from the same institution, note this is not multiplied by 100
+is_upper_bound = int(sys.argv[2])
+
+if (is_upper_bound == 0):
+    upper_bound = int(sys.argv[3]) 
+    #upper bound on all matchings (multiplied by 100)
+else:
+    M_name = sys.argv[3]
+    upper_bound_matrix = np.load(M_name, allow_pickle = True)
+
+is_load_fixed = int(sys.argv[4])
+
+if (is_load_fixed == 0):
+    k = int(sys.argv[5]) #k is the upper bound for papers per reviewer
+else:
+    loads_name = sys.argv[5]
+    load_list = np.load(loads_name, allow_pickle = True)
+
+l = int(sys.argv[6]) #l is the number of reviewers per paper
+
+institution_file = sys.argv[7] #npz containing institution list (index = reviewer)
+T = float(sys.argv[8]) #upper bound on reviews from the same institution, note this is not multiplied by 100
 
 institution_pkg = np.load(institution_file)
 num_institutions = int(institution_pkg["num_institutions"])
@@ -50,7 +66,10 @@ def get_output():
     A = [([0] * d) for i in range(n)] 
     #creates n x d matrix of 0's to represent assignment
     
-    solve_fractional_LP(upper_bound/100, S, M, A, n, d)
+    if (is_upper_bound == 0):
+        solve_fractional_LP(upper_bound/100, S, M, A, n, d)
+    else:
+        solve_fractional_LP(upper_bound_matrix, S, M, A, n, d)
     
 
 def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n, d):
@@ -74,8 +93,10 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
                 if (mask_matrix[i][j] == 1):
                     v = model.addVar(lb = 0, ub = 0, name = f"{i} {padded_j}")
                 else:
-                    v = model.addVar(lb = 0, ub = Q, name = f"{i} {padded_j}")
-                    #upper bound for the weight of the matching is Q
+                    if (is_upper_bound == 0):
+                        v = model.addVar(lb = 0, ub = Q, name = f"{i} {padded_j}") #upper bound for the weight of the matching is Q
+                    else: 
+                        v = model.addVar(lb = 0, ub = (Q[i][j])/100, name = f"{i} {padded_j}") #upper bound specified in the matrix
                     
                     ##if you want to set an upper bound on a specific matching
                     # you would do so here with
@@ -93,8 +114,11 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             for j in range(d):
                 papers += assignment_matrix[i][j]
                 
-            model.addConstr(papers <= k) 
-            #each reviewer has k or less papers to review
+            if (is_load_fixed == 0):
+                model.addConstr(papers <= k) 
+                #each reviewer has k or less papers to review
+            else:
+                model.addConstr(papers <= load_list[i])
             
             ##if you want to set different amounts of papers for a few reviewers
             # you would do so here with
