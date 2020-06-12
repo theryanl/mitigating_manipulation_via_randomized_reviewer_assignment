@@ -47,14 +47,14 @@ for t in np.linspace(1, 2, 11): #1.0, 1.1, 1.2, ..., 1.9, 2.0
         #for more details see the comments in institution_generator.py
 
         #running the LP portion without institution constraints for comparison to the optimal:
-        result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} {Q} {k} {l} institutions.npz {n}") #load cannot be >n
+        result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} 0 {Q} 0 {k} {l} institutions.npz {n}") #load cannot be >n
         test = (result.readlines())[-2]
         opt = float(test)
         r = os.system("./a.out < output.txt > output_bvn.txt")
         opt_pairs = count_num_institution_pairs("output_bvn.txt", "institutions.npz") #counting the pairs of reviewers that belong to the same institution
 
         #run actual test
-        result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} {Q} {k} {l} institutions.npz {t}") #running LP portion
+        result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} 0 {Q} 0 {k} {l} institutions.npz {t}") #running LP portion
         test = (result.readlines())[-2]
                
         try:

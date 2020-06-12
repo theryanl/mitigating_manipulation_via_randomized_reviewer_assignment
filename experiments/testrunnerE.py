@@ -31,7 +31,7 @@ os.system("g++ -lm ../core/bvn.cpp") #compiling the bvn portion
 generate_dced_with_inst(n, g) # generate the similarities and institutions
 
 #running the LP portion without institution constraints for comparison to the optimal:
-result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} {Q} {k} {l} institutions.npz {n}") # institution load cannot be >n
+result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} 0 {Q} 0 {k} {l} institutions.npz {n}") # institution load cannot be >n
 test = (result.readlines())[-2]
 opt = float(test)
 r = os.system("./a.out < output.txt > output_bvn.txt")
@@ -42,7 +42,7 @@ for t in np.linspace(1, 3, 11):
     print(f"running t = {t}...")
 
     #run actual test
-    result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} {Q} {k} {l} institutions.npz {t}") #running LP portion
+    result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} 0 {Q} 0 {k} {l} institutions.npz {t}") #running LP portion
     test = (result.readlines())[-2]
     try:
         TPMS_score = float(test)

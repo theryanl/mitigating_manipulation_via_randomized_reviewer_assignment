@@ -29,7 +29,7 @@ for gs in group_sizes:
         # generate the community model
         generate_deterministic_concentrated_expertise_dataset(numpap, gs)
             
-        Q_result = os.popen(f"python3 ../core/LP_TPMS.py det_concentrated_expertise_dataset.npz {Q} {k} {l}")
+        Q_result = os.popen(f"python3 ../core/LP_TPMS.py det_concentrated_expertise_dataset.npz 0 {Q} 0 {k} {l}")
         lines = Q_result.readlines()
         try:
             TPMS_score = float(lines[-2]) #the objective value

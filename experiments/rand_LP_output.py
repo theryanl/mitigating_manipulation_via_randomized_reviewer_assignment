@@ -5,7 +5,7 @@ import time
 import random
 import sys
 
-""" Runs the normal TPMS objective LP with a randomly generated nxn similarity matrix"""
+""" Runs the normal TPMS objective LP with a randomly generated nxn similarity matrix, with the same upper bound for all reviewer-paper probabilities and the same load constraint across all reviewers. """
 
 Q = float(sys.argv[1]) #upper bound probability of matching
 size = int(sys.argv[2]) #side length of similarity matrix
