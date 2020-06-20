@@ -7,14 +7,14 @@ from std_error import calculate_standard_error
 from get_dataset_name import get_dataset_name
 from generate_dataset import *
 
-# Runs the test that varies Q and checks the sum-sim objective, on random 100x100 similarities
+# Runs the test that varies Q and checks the sum-sim objective, on random square similarities
 
 # fixed parameters
 num_trials = 10
 my_dataset = "rand.npz"
 k = 3
 l = 3
-size = 100
+size = 1000
 
 os.system("g++ -lm ../core/bvn.cpp") #compiles the bvn portion
 

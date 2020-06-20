@@ -73,3 +73,7 @@ def generate_random(n):
     M = np.zeros((n, n))
     np.savez("rand.npz", similarity_matrix=S.tolist(), mask_matrix=M.tolist())
 
+# As above, but with institutions of size instsize
+def generate_random_with_inst(n, instsize):
+    generate_random(n)
+    write_sequential_institutions(n, instsize)

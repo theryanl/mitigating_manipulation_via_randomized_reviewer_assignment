@@ -7,7 +7,7 @@ from institution_generator import *
 from std_error import calculate_standard_error 
 from get_dataset_name import get_dataset_name
 
-""" This file runs multiple tests of the similarity matrix institution LP + bvn process on a user-specified file. The tests run have different upper bounds on the number of reviewers per institution reviewing the same paper. """
+# Varies the institution loads and observes objective and number of same institution pairs, on a dataset
 
 ## The tests are run on a fixed Q value (upper bound on any matching). This can be changed here:
 Q = 50 

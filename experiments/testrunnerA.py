@@ -6,7 +6,7 @@ from get_paper_totals import get_paper_totals
 from std_error import calculate_standard_error 
 from get_dataset_name import get_dataset_name
 
-""" This file runs multiple tests of the similarity matrix LP + bvn process on a user-specified file. Then, it outputs data that allows the user to compare the two. """
+# This runs the experiment where Q is varied and observes either the sum-sim or fairness objective, on a dataset.
 
 ## adjust this constant if you want more or less trials per size to take the average over.
 num_trials = 10
