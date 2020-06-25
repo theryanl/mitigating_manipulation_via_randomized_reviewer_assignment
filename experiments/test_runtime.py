@@ -21,7 +21,7 @@ runtimes = []
 for i in range(num_trials):
     print(i)
     start_time = time.time()
-    Q_result = os.popen(f"python3 ../core/LP_TPMS.py {my_dataset} 0 {Q} 0 {k} {l}")
+    Q_result = os.popen(f"python3 ../core/LP_TPMS.py {my_dataset} 0 {Q} 0 {k} 0 {l}")
     lines = Q_result.readlines()
     os.system("./a.out < output.txt > output_bvn.txt")
     end_time = time.time()      
@@ -36,7 +36,7 @@ for i in range(num_trials):
     print(i)
     generate_institutions_list(15, 2435)
     start_time = time.time()
-    result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} 0 {Q} 0 {k} {l} institutions.npz {t}")
+    result = os.popen(f"python3 ../core/LP_output_institution_t.py {my_dataset} 0 {Q} 0 {k} 0 {l} institutions.npz {t}")
     test = result.readlines()
     os.system("./a.out < output.txt > output_bvn.txt")
     end_time = time.time()
