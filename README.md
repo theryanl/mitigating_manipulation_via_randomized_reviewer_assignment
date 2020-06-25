@@ -10,9 +10,9 @@ The first step creates a fractional solution to the LP and puts it in "output.tx
 
 	To run the first step and maximize sum-similarity, run the command line (from the core/ directory): python3 ./LP_TPMS.py [name].npz X U Y K Z L
 	where X is 0 if you want to set the same upper bound for all reviewer-paper matchings and U is the desired upper bound * 100 (U must be an integer),
-	X is 1 if you want to specify the reviewer-paper matchings using a matrix, and U is the name of an npy file containing the matrix of upper-bounds (each multiplied by 100)
+	X is 1 if you want to specify the reviewer-paper matchings using a matrix, and U is the name of an npy file containing the matrix of upper-bounds (each multiplied by 100).
 	Y is 0 if you want to set the same upper bound for all reviewers' paper loads and K is the upper bound,
-	Y is 1 if you want to specify the reviewer loads using a list, and in this case K is the name of an npy file containing the list of upper bounds on the reviewer loads
+	Y is 1 if you want to specify the reviewer loads using a list, and in this case K is the name of an npy file containing the list of upper bounds on the reviewer loads.
 	Z is 0 if you want to set the same number for all papers' reviewer loads and L is that number,
 	Z is 1 if you want to specify the paper loads using a list, and in this case L is the name of an npy file containing the list of values for the paper loads.
 
