@@ -41,7 +41,7 @@ for size in range(start_size, end_size + step_size, step_size):
         generate_random(size)
 
         start_time = time.time()
-        result = os.popen(f"python3 ../core/LP_TPMS.py rand.npz 0 {Q} 0 {k} {l}")
+        result = os.popen(f"python3 ../core/LP_TPMS.py rand.npz 0 {Q} 0 {k} 0 {l}")
         #result = os.popen(f"python3 ./rand_LP_output.py {Q} {size} {k} {l}") #runs the LP part and puts the output into result
         lines = result.readlines()
         try:

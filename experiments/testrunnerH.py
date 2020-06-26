@@ -41,7 +41,7 @@ for size in range(start_size, end_size + step_size, step_size):
     for i in range(num_trials):
         generate_deterministic_concentrated_expertise_dataset(size, g) # generate the similarities
         start_time = time.time()
-        result = os.popen(f"python3 ../core/LP_TPMS.py det_concentrated_expertise_dataset.npz 0 {Q} 0 {k} {l}")
+        result = os.popen(f"python3 ../core/LP_TPMS.py det_concentrated_expertise_dataset.npz 0 {Q} 0 {k} 0 {l}")
         lines = result.readlines()
         try:
             TPMS_score = float(lines[-2]) #the objective value

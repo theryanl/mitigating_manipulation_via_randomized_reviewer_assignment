@@ -31,7 +31,7 @@ for Q in range(10, 110, 10): #loops through Q values (multiplied by 100)
     for i in range(num_trials):
         generate_random(size)
 
-        Q_result = os.popen(f"python3 ../core/LP_TPMS.py {my_dataset} 0 {Q} 0 {k} {l}")
+        Q_result = os.popen(f"python3 ../core/LP_TPMS.py {my_dataset} 0 {Q} 0 {k} 0 {l}")
         lines = Q_result.readlines()
         try:
             TPMS_score = float(lines[-2]) #the objective value in the string output

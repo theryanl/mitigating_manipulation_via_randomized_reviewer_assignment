@@ -32,7 +32,7 @@ if (obj_type == 0): #TPMS objective
         print(f"running Q = {Q/100}...")
         
         #getting our TPMS result for Q
-        Q_result = os.popen(f"python3 ../core/LP_TPMS.py {my_dataset} 0 {Q} 0 {k} {l}")
+        Q_result = os.popen(f"python3 ../core/LP_TPMS.py {my_dataset} 0 {Q} 0 {k} 0 {l}")
         lines = Q_result.readlines()
         try:
             TPMS_score = float(lines[-2]) #the objective value in the string output
@@ -69,7 +69,7 @@ elif (obj_type == 1): #max-min fairness objective
         print(f"running Q = {Q/100}...")
         
         #getting result for Q
-        Q_result = os.popen(f"python3 ../core/LP_max_min_fairness.py {my_dataset} 0 {Q} 0 {k} {l}") #running the LP portion
+        Q_result = os.popen(f"python3 ../core/LP_max_min_fairness.py {my_dataset} 0 {Q} 0 {k} 0 {l}") #running the LP portion
         lines = Q_result.readlines()
         
         try:

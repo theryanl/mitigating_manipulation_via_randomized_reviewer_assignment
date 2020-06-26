@@ -14,15 +14,21 @@ else:
     M_name = sys.argv[3]
     upper_bound_matrix = np.load(M_name, allow_pickle = True)
 
-is_load_fixed = int(sys.argv[4])
+is_reviewer_load_fixed = int(sys.argv[4])
 
-if (is_load_fixed == 0):
+if (is_reviewer_load_fixed == 0):
     k = int(sys.argv[5]) #k is the upper bound for papers per reviewer
 else:
-    loads_name = sys.argv[5]
-    load_list = np.load(loads_name, allow_pickle = True)
+    reviewer_loads_name = sys.argv[5]
+    reviewer_load_list = np.load(reviewer_loads_name, allow_pickle = True)
+    
+is_paper_load_fixed = int(sys.argv[6])
 
-l = int(sys.argv[6]) #l is the number of reviewers per paper
+if (is_paper_load_fixed == 0):
+    l = int(sys.argv[7]) #l is the number of reviewers per paper
+else:
+    paper_loads_name = sys.argv[7]
+    paper_load_list = np.load(paper_loads_name, allow_pickle = True)
 
 start_time = time.time()
 file = open("output.txt", "w")
@@ -102,7 +108,7 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             for j in range(d):
                 papers += assignment_matrix[i][j]
             
-            if (is_load_fixed == 0):
+            if (is_reviewer_load_fixed == 0):
                 model.addConstr(papers <= k) 
                 #each reviewer has k or less papers to review
             else:
@@ -119,8 +125,11 @@ def solve_fractional_LP(Q, similarity_matrix, mask_matrix, assignment_matrix, n,
             for i in range(n):
                 reviewers += assignment_matrix[i][j]
             
-            model.addConstr(reviewers == l)
-            #each paper gets exactly l reviews
+            if (is_paper_load_fixed == 0):
+                model.addConstr(reviewers == l)
+                #each paper gets exactly l reviews
+            else:
+                model.addConstr(reviewers == paper_load_list[j])
         
         model.optimize()
 
