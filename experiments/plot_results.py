@@ -27,7 +27,7 @@ def legend():
 
 # Plots the legend for the simulations
 def sim_legend():
-    plt.rcParams.update({'font.size': 8})
+    plt.rcParams.update({'font.size': 9})
     for i in range(5):
         plt.plot(np.arange(10), np.zeros(10), label=sim_labels[i], color=colors[i], marker=markers[i], ms=markersize, linewidth=lw, linestyle=ls[i])
     plt.legend(ncol=3)
@@ -86,13 +86,17 @@ def plotC(): # institution experiment, datasets
     data1 = np.load("C_preflib1.npy", allow_pickle=True)
     data2 = np.load("C_preflib2.npy", allow_pickle=True)
     data3 = np.load("C_preflib3.npy", allow_pickle=True)
-    ylab = "Sum-similarity (%)"
+    ylab = "Sum-similarity (% of optimal)"
 
+    x = np.linspace(1, 2, 11)
     plt.rcParams.update({'font.size': fontsize})
     for i, data in enumerate([data0, data1, data2, data3]):
         feasible_ours = data[1] >= 0 
-        plt.errorbar(data[0, feasible_ours]*100, data[1, feasible_ours]*100, xerr=data[2, feasible_ours]*100,  yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i]) # our algo
-    plt.xlabel("Same-institution reviewer pairs (%)")
+        #plt.errorbar(data[0, feasible_ours]*100, data[1, feasible_ours]*100, xerr=data[2, feasible_ours]*100,  yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i]) # our algo
+        plt.errorbar(x[feasible_ours], data[1, feasible_ours]*100, yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i]) # our algo
+
+    #plt.xlabel("Same-institution reviewer pairs (%)")
+    plt.xlabel("Max. expected same-institution reviewers/paper")
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
@@ -125,18 +129,23 @@ def plotE(): # institution experiment, simulations
     # plots results from testrunners: E, G
     # data = [number_same-institution_pairs, our_algo_objectives, std_err_pairs, std_err_obj]
     plt.rcParams.update({'font.size': fontsize})
+    x = np.linspace(1, 3, 11)
     for i, g in enumerate([3, 6, 9, 12]):
         data = np.load("E_" + str(g) + ".npy", allow_pickle=True)
         feasible_ours = data[1] >= 0 
-        plt.errorbar(data[0, feasible_ours]*100, data[1, feasible_ours]*100, xerr=data[2, feasible_ours]*100,  yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i])
+        #plt.errorbar(data[0, feasible_ours]*100, data[1, feasible_ours]*100, xerr=data[2, feasible_ours]*100,  yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i])
+        plt.errorbar(x[feasible_ours], data[1, feasible_ours]*100, yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i])
+
 
     data = np.load("G.npy", allow_pickle=True)
     feasible_ours = data[1] >= 0 
     i = 4
-    plt.errorbar(data[0, feasible_ours]*100, data[1, feasible_ours]*100, xerr=data[2, feasible_ours]*100,  yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i])
+    #plt.errorbar(data[0, feasible_ours]*100, data[1, feasible_ours]*100, xerr=data[2, feasible_ours]*100,  yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i])
+    plt.errorbar(x[feasible_ours], data[1, feasible_ours]*100, yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i])
 
-    ylab = "Sum-similarity (%)"
-    plt.xlabel("Same-institution reviewer pairs (%)")
+    ylab = "Sum-similarity (% of optimal)"
+    #plt.xlabel("Same-institution reviewer pairs (%)")
+    plt.xlabel("Max. expected same-institution reviewers/paper")
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
