@@ -96,7 +96,7 @@ def plotC(): # institution experiment, datasets
         plt.errorbar(x[feasible_ours], data[1, feasible_ours]*100, yerr=data[3, feasible_ours]*100, color=colors[i], linewidth=lw, marker=markers[i], ms=markersize, linestyle=ls[i]) # our algo
 
     #plt.xlabel("Same-institution reviewer pairs (%)")
-    plt.xlabel("Max. expected same-institution reviewers/paper")
+    plt.xlabel("Max. expected same-subset reviewers/paper")
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
@@ -145,7 +145,7 @@ def plotE(): # institution experiment, simulations
 
     ylab = "Sum-similarity (% of optimal)"
     #plt.xlabel("Same-institution reviewer pairs (%)")
-    plt.xlabel("Max. expected same-institution reviewers/paper")
+    plt.xlabel("Max. expected same-subset reviewers/paper")
     plt.ylabel(ylab)
     plt.ylim(bottom=0)
     plt.tight_layout()
