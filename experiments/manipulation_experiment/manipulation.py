@@ -72,49 +72,6 @@ def random_honest_bids(S_new, manipulator):
         if rev != manipulator:
             do_rev_bids(rev, p_low, pap_frac)
 
-'''
-def run_TPMS_assignment_with_test(new_S, paper, manipulator):
-    try:
-        model = gp.Model("my_model") 
-        obj = 0 #objective is the total sum similarity
-        A = [([0] * d) for i in range(n)] #A represents assignment
-        
-        for i in range(n):
-            for j in range(d):
-                
-                if (M[i][j] == 1):
-                    v = model.addVar(lb = 0, ub = 0, name = f"{i} {j}")
-                else:
-                    v = model.addVar(lb = 0, ub = 1, name = f"{i} {j}")
-                
-                A[i][j] = v
-                obj += v * new_S[i][j]
-        
-        model.setObjective(obj, GRB.MAXIMIZE) #telling Gurobi to maximize obj
-        
-        for i in range(n):
-            papers = 0
-            for j in range(d):
-                papers += A[i][j]
-            model.addConstr(papers <= k) #each reviewer has k or less papers to review
-        
-        for j in range(d):
-            reviewers = 0
-            for i in range(n):
-                reviewers += A[i][j]
-            model.addConstr(reviewers == l) #each paper gets exactly l reviews
-        
-        model.optimize()
-        
-        return A[manipulator][paper].x
-    
-    except gp.GurobiError as e:
-        print("Error code " + str(e.errno) + ": " + str(e))
-    except AttributeError:
-        print("Attribute error")
-'''
-
-
 def main():
     y_of_xs = []
     values = []
@@ -132,13 +89,7 @@ def main():
             manipulator = ranked_reviewers[paper][x]
             
             new_S = np.array(S)
-            '''
-            for i in range(n):
-                if i == manipulator:
-                    new_S[i][paper] *= bidding_scale
-                else:
-                    new_S[i][paper] /= bidding_scale
-            '''
+
             for j in range(d):
                 if j == paper:
                     new_S[manipulator][j] *= bidding_scale
@@ -159,17 +110,18 @@ def main():
     
     
 ##PLOTTING
+    t = time.time()
     plt.plot(mani_values, y_of_xs)
     plt.xlabel("xth best reviewer")
     plt.ylabel("fraction of asssignments assigned")
-    plt.savefig(f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}")
+    plt.savefig(f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}" + str(t))
     plt.clf()
     
     time_taken = time.time() - start_time
     print(f"Total time: {time_taken}")
     
 ##SAVING
-    title = f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_" + str(time.time())
+    title = f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_" + str(t)
     
     np.savez(title, \
     mani_values = mani_values, \
@@ -190,10 +142,10 @@ start_time = time.time()
 
 k = 6
 l = 3
-dataset = "iclr2018.npz"
+dataset = "../data/iclr2018.npz"
 
 mani_values = [0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
-num_selections = 20
+num_selections = 30
 bidding_scale = 2
 #the following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
 scores = np.load(dataset)
