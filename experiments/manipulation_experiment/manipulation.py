@@ -146,7 +146,7 @@ dataset = "../data/iclr2018.npz"
 
 mani_values = [0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
 num_selections = 30
-bidding_scale = 2
+#bidding_scale = 2
 #the following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
 scores = np.load(dataset)
 S = scores["similarity_matrix"]
@@ -158,7 +158,8 @@ d = len(S[0]) #number of papers
 
 baseline = (sys.argv[1] == 'standard')
 honest_bids = (sys.argv[2] == 'bids')
-print("baseline", baseline, "honest_bids", honest_bids)
+bidding_scale = int(sys.argv[3])
+print("baseline", baseline, "honest_bids", honest_bids, "scale", bidding_scale)
 
 ranked_reviewers = valid_ranked_reviewers_for_all_papers()
 ranked_papers = valid_ranked_papers_for_all_reviewers()
