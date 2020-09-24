@@ -114,7 +114,7 @@ def main():
     plt.plot(mani_values, y_of_xs)
     plt.xlabel("xth best reviewer")
     plt.ylabel("fraction of asssignments assigned")
-    plt.savefig(f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}" + str(t))
+    plt.savefig(f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}" + str(t) + ".png")
     plt.clf()
     
     time_taken = time.time() - start_time
@@ -146,7 +146,6 @@ dataset = "../data/iclr2018.npz"
 
 mani_values = [0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
 num_selections = 30
-#bidding_scale = 2
 #the following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
 scores = np.load(dataset)
 S = scores["similarity_matrix"]
