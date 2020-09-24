@@ -107,21 +107,33 @@ def main():
         print("x", x, "rate", y_of_x)
         y_of_xs.append(y_of_x)
         values.append(successful_assignments)
+
+        # temp save
+        np.savez("temp_save", \
+        mani_values = mani_values, \
+        num_selections = num_selections, \
+        paper_selectionss = paper_selectionss, \
+        k = k, \
+        l = l, \
+        y_of_xs = y_of_xs, \
+        values = values, \
+        bidding_scale = bidding_scale)
+ 
     
     
 ##PLOTTING
-    t = time.time()
+    t = int(time.time())
     plt.plot(mani_values, y_of_xs)
     plt.xlabel("xth best reviewer")
     plt.ylabel("fraction of asssignments assigned")
-    plt.savefig(f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}" + str(t) + ".png")
+    plt.savefig(f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_trials{num_selections}_" + str(t) + ".png")
     plt.clf()
     
     time_taken = time.time() - start_time
     print(f"Total time: {time_taken}")
     
 ##SAVING
-    title = f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_" + str(t)
+    title = f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_trials{num_selections}_" + str(t)
     
     np.savez(title, \
     mani_values = mani_values, \
@@ -144,7 +156,7 @@ k = 6
 l = 3
 dataset = "../data/iclr2018.npz"
 
-mani_values = [0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
+mani_values = [0, 1, 3, 7, 15, 31, 63, 127, 255, 511]#[0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
 num_selections = 30
 #the following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
 scores = np.load(dataset)
