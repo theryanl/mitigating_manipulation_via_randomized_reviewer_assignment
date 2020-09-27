@@ -2,7 +2,8 @@ import numpy as np
 import gurobipy as gp
 from gurobipy import GRB
 
-
+# Standard, deterministic assignment
+# Return {0, 1} if manipulator was assigned to paper
 def standard_assignment(new_S, M, paper, manipulator, k=6, l=3):
     n, d = new_S.shape
 
@@ -45,7 +46,8 @@ def standard_assignment(new_S, M, paper, manipulator, k=6, l=3):
     except AttributeError:
         print("Attribute error")
 
-
+# Randomized assignment
+# Return probability of manipulator being assigned to paper
 def our_assignment(new_S, M, paper, manipulator, k=6, l=3, upper_bound=0.5):
     n, d = new_S.shape
 

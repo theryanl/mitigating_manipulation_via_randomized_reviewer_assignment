@@ -7,6 +7,8 @@ import copy
 import algos
 import sys
 
+# Return, for each paper, a list of non-conflicting reviewers
+# ordered by decreasing similarity
 def valid_ranked_reviewers_for_all_papers():
     result = []
     
@@ -26,7 +28,8 @@ def valid_ranked_reviewers_for_all_papers():
         
     return np.array(result, dtype=object)
 
-
+# Return, for each reviewer, a list of non-conflicting papers
+# ordered by decreasing similarity
 def valid_ranked_papers_for_all_reviewers():
     result = []
     
@@ -47,12 +50,12 @@ def valid_ranked_papers_for_all_reviewers():
     return np.array(result, dtype=object)
 
 
-
+# Modify S_new by adding bids from all honest reviewers
 def random_honest_bids(S_new, manipulator):
-    def do_rev_bids(rev, p, pap_frac):
+    def do_rev_bids(rev, p, pap_frac): # add bids for rev
         for pap in ranked_papers[rev][0:int(pap_frac * d)]:
             z = np.random.rand()
-            if z < p/pap_frac:
+            if z < p/pap_frac: # probability of bidding
                 if np.random.rand() < 0.5:
                     S_new[rev][pap] *= bidding_scale
                 else:
@@ -81,15 +84,18 @@ def main():
     for x in (mani_values):
         successful_assignments = []
         
+        # Choose papers for manipulator to target
         paper_selections = np.random.choice(d, num_selections, replace = False)
         paper_selectionss.append(paper_selections)
         for paper in paper_selections:
             count += 1
             print(f"{count}/{num_trials}")
+            # Get xth ranked reviewer to be the manipulator
             manipulator = ranked_reviewers[paper][x]
             
             new_S = np.array(S)
 
+            # Manipulator bids
             for j in range(d):
                 if j == paper:
                     new_S[manipulator][j] *= bidding_scale
@@ -99,6 +105,7 @@ def main():
             if honest_bids:
                 random_honest_bids(new_S, manipulator)
             
+            # Run assignment
             if baseline:
                 successful_assignments.append(algos.standard_assignment(new_S, M, paper, manipulator, k, l))
             else:
@@ -156,9 +163,14 @@ k = 6
 l = 3
 dataset = "../data/iclr2018.npz"
 
-mani_values = [0, 1, 3, 7, 15, 31, 63, 127, 255, 511]#[0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
-num_selections = 30
-#the following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
+# Ranks of the reviewers' similarities wrt the target paper
+mani_values = [2, 4, 10, 21, 44, 89, 180, 361]
+# true 2**(i.5) - 1: [0, 1, 4, 10, 21, 44, 89, 180, 361] 
+# 2**i - 1: [0, 1, 3, 7, 15, 31, 63, 127, 255, 511]
+#[0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
+num_selections = 50 # number of trials per mani_value
+
+# The following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
 scores = np.load(dataset)
 S = scores["similarity_matrix"]
 M = scores["mask_matrix"] #each entry is 0 or 1, with 1 representing a conflict.
@@ -166,12 +178,13 @@ M = scores["mask_matrix"] #each entry is 0 or 1, with 1 representing a conflict.
 n = len(S) #number of reviewers
 d = len(S[0]) #number of papers
 
-
+# Parse command line args
 baseline = (sys.argv[1] == 'standard')
 honest_bids = (sys.argv[2] == 'bids')
 bidding_scale = int(sys.argv[3])
 print("baseline", baseline, "honest_bids", honest_bids, "scale", bidding_scale)
 
+# Sort revs and paps
 ranked_reviewers = valid_ranked_reviewers_for_all_papers()
 ranked_papers = valid_ranked_papers_for_all_reviewers()
 
