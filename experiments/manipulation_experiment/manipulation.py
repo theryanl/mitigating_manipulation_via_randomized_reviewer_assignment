@@ -61,10 +61,13 @@ def random_honest_bids(S_new, manipulator):
                 else:
                     S_new[rev][pap] /= bidding_scale
 
+    # overall probability of bidding on each paper by group
     p_high = 0.024
     p_low = 0.0016
+    # number of revs in each group
     n_high = int(0.3 * n)
     n_low = int(0.5 * n)
+    # frac of papers each rev considers
     pap_frac = 0.1
     shuffled_revs = np.arange(n)
     np.random.shuffle(shuffled_revs)
@@ -115,7 +118,7 @@ def main():
         y_of_xs.append(y_of_x)
         values.append(successful_assignments)
 
-        # temp save
+        # save in case of crash
         np.savez("temp_save", \
         mani_values = mani_values, \
         num_selections = num_selections, \
@@ -127,8 +130,7 @@ def main():
         bidding_scale = bidding_scale)
  
     
-    
-##PLOTTING
+    # Quick plot    
     t = int(time.time())
     plt.plot(mani_values, y_of_xs)
     plt.xlabel("xth best reviewer")
@@ -139,7 +141,7 @@ def main():
     time_taken = time.time() - start_time
     print(f"Total time: {time_taken}")
     
-##SAVING
+    # Save data
     title = f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_trials{num_selections}_" + str(t)
     
     np.savez(title, \
@@ -159,15 +161,18 @@ def main():
 
 start_time = time.time()
 
+# rev+pap loads
 k = 6
 l = 3
+
 dataset = "../data/iclr2018.npz"
 
-# Ranks of the reviewers' similarities wrt the target paper
-mani_values = [2, 4, 10, 21, 44, 89, 180, 361]
-# true 2**(i.5) - 1: [0, 1, 4, 10, 21, 44, 89, 180, 361] 
+# Ranks of the reviewers' similarities wrt the target paper,
+# roughly logspaced
 # 2**i - 1: [0, 1, 3, 7, 15, 31, 63, 127, 255, 511]
-#[0, 2, 4, 8, 16, 32, 50, 100, 150, 200, 300, 400]
+# int(2**(i.5)) - 1: [0, 1, 4, 10, 21, 44, 89, 180, 361] 
+mani_values = [2, 4, 10, 21, 44, 89, 180, 361]
+
 num_selections = 50 # number of trials per mani_value
 
 # The following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
