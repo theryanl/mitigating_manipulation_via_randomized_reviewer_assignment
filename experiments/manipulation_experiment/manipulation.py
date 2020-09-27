@@ -171,7 +171,7 @@ dataset = "../data/iclr2018.npz"
 # roughly logspaced
 # 2**i - 1: [0, 1, 3, 7, 15, 31, 63, 127, 255, 511]
 # int(2**(i.5)) - 1: [0, 1, 4, 10, 21, 44, 89, 180, 361] 
-mani_values = [2, 4, 10, 21, 44, 89, 180, 361]
+mani_values = [0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 2, 4, 10, 21, 44, 89, 180, 361]
 
 num_selections = 50 # number of trials per mani_value
 

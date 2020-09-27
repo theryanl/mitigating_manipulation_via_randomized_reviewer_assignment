@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import sys
 from matplotlib.ticker import ScalarFormatter
 
-fontsize = 14
+fontsize = 18
+lw = 3
+ms = 10
 
 # Loads relevant data from .npz file with given name
 def load_file(name):
@@ -30,9 +32,13 @@ def combine_data(data1, data2):
 def append_data(data1, data2):
     mvs1, vs1 = data1
     mvs2, vs2 = data2
-    assert(all(mvs1 != mvs2))
+    assert(mvs1 != mvs2)
 
-    return np.append(mvs1, mvs2), np.append(vs1, vs2)
+    mv = np.append(mvs1, mvs2)
+    v = vs1 + vs2
+    mv, v = zip(*sorted(zip(mv, v)))
+    return np.array(mv), v
+
 
 # Compute mean and standard error of mean
 def compute_stats(vs):
@@ -57,16 +63,18 @@ def plot_res(b, o, name):
     mvs = mvs + 1 # adjust to 1-indexing
 
     plt.rcParams.update({'font.size': fontsize})
-    plt.errorbar(mvs, omeans, yerr=oses, fmt="ro--")
-    plt.errorbar(mvs, bmeans, yerr=bses, fmt="bo-")
-    plt.plot(mvs, [0.5]*len(mvs), 'k:')
-    plt.xlabel("Manipulating reviewer rank")
+    print(mvs, omeans)
+    plt.errorbar(mvs, omeans, yerr=oses, fmt="ro--", linewidth=lw, markersize=ms)
+    plt.errorbar(mvs, bmeans, yerr=bses, fmt="bo-", linewidth=lw, markersize=ms)
+    plt.plot(mvs, [0.5]*len(mvs), 'k:', linewidth=lw)
+    plt.ylim([-0.05, 1.05])
+    plt.xlabel("Malicious reviewer rank")
     plt.ylabel("Manipulation success rate")
     plt.xscale('log', basex=2)
     ax = plt.gca()
     plt.xticks([2**i for i in range(10)])
     ax.xaxis.set_major_formatter(ScalarFormatter())
-    ax.annotate('Desired limit', xy=(100, 0.51))
+    #ax.annotate('Desired limit', xy=(100, 0.51))
     plt.tight_layout()
     plt.savefig(str(name) + ".pdf")
     plt.show()
@@ -75,8 +83,8 @@ def plot_res(b, o, name):
 # Plots legend for manipulation experiment
 def leg():
     plt.rcParams.update({'font.size': fontsize})
-    plt.plot(np.arange(10), np.zeros(10), 'bo-', label='Standard Assignment')
-    plt.plot(np.arange(10), np.zeros(10), 'ro--', label='Randomized Assignment')
+    plt.plot(np.arange(10), np.zeros(10), 'bo-', label='Standard Assignment', linewidth=lw, markersize=ms)
+    plt.plot(np.arange(10), np.zeros(10), 'ro--', label='Randomized Assignment', linewidth=lw, markersize=ms)
     plt.legend()
     plt.savefig("legend.pdf")
     plt.show()
