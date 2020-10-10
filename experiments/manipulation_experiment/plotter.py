@@ -15,7 +15,8 @@ def load_file(name):
     vs = []
     for v in f["values"]:
         vs.append(v)
-    return mvs, vs
+    mvs, vs = zip(*sorted(zip(mvs, vs)))
+    return np.array(mvs), list(vs)
 
 # Combines the loaded data for two files with same manipulation_values
 def combine_data(data1, data2):
@@ -50,30 +51,36 @@ def compute_stats(vs):
     return means, ses
 
 # Plots results for manipulation experiment
-#   b: (manipulation_values, values) for standard assignment
+#   b: (manipulation_values, values) for standard assignment, 
+#       where values is a list of lists containing, for each manipulation_value, the results of all trials
 #   o: (manipulation_values, values) for randomized assignment
+#   nm: (manipulation_values, values) for non-manipulated assignment
 #   name: name of plot file
-def plot_res(b, o, name):
+def plot_res(b, o, nm, name):
     mvs, bvs = b
     mvs2, ovs = o
+    mvs0, nmvs = nm
     assert(all(mvs == mvs2))
+    assert(all(mvs == mvs0))
 
     bmeans, bses = compute_stats(bvs)
     omeans, oses = compute_stats(ovs)
+    nmmeans, nmses = compute_stats(nmvs)
     mvs = mvs + 1 # adjust to 1-indexing
 
     plt.rcParams.update({'font.size': fontsize})
     print(mvs, omeans)
-    plt.errorbar(mvs, omeans, yerr=oses, fmt="ro--", linewidth=lw, markersize=ms)
+    plt.errorbar(mvs, nmmeans, yerr=nmses, fmt="gX-.", linewidth=lw, markersize=ms)
     plt.errorbar(mvs, bmeans, yerr=bses, fmt="bo-", linewidth=lw, markersize=ms)
+    plt.errorbar(mvs, omeans, yerr=oses, fmt="rs--", linewidth=lw, markersize=ms)
     plt.plot(mvs, [0.5]*len(mvs), 'k:', linewidth=lw)
     plt.ylim([-0.05, 1.05])
-    plt.xlabel("Malicious reviewer rank")
-    plt.ylabel("Manipulation success rate")
+    plt.xlabel("Reviewer rank")
+    plt.ylabel("Assignment probability")
     plt.xscale('log', basex=2)
     ax = plt.gca()
     plt.xticks([2**i for i in range(10)])
-    ax.xaxis.set_major_formatter(ScalarFormatter())
+    #ax.xaxis.set_major_formatter(ScalarFormatter())
     #ax.annotate('Desired limit', xy=(100, 0.51))
     plt.tight_layout()
     plt.savefig(str(name) + ".pdf")
@@ -82,10 +89,11 @@ def plot_res(b, o, name):
 
 # Plots legend for manipulation experiment
 def leg():
-    plt.rcParams.update({'font.size': fontsize})
-    plt.plot(np.arange(10), np.zeros(10), 'bo-', label='Standard Assignment', linewidth=lw, markersize=ms)
-    plt.plot(np.arange(10), np.zeros(10), 'ro--', label='Randomized Assignment', linewidth=lw, markersize=ms)
-    plt.legend()
+    plt.rcParams.update({'font.size': 10})
+    plt.plot(np.arange(10), np.zeros(10), 'rs--', label='Our randomized assignment algorithm (Q=0.5)', linewidth=lw, markersize=ms)
+    plt.plot(np.arange(10), np.zeros(10), 'bo-', label='Standard assignment algorithm', linewidth=lw, markersize=ms)
+    plt.plot(np.arange(10), np.zeros(10), 'gX-.', label='Standard assignment algorithm, no manipulation', linewidth=lw, markersize=ms)
+    plt.legend(ncol=1)
     plt.savefig("legend.pdf")
     plt.show()
     plt.close()

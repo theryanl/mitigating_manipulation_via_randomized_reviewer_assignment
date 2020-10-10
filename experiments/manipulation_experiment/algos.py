@@ -90,4 +90,48 @@ def our_assignment(new_S, M, paper, manipulator, k=6, l=3, upper_bound=0.5):
     except AttributeError:
         print("Attribute error")
 
+# Return, for each paper, a list of non-conflicting reviewers
+# ordered by decreasing similarity
+def valid_ranked_reviewers_for_all_papers(S, M):
+    d = len(S[0])
+    result = []
+    
+    for paper in range(d):
+        naive_ranked_reviewers = np.argsort(S[:, paper])
+        reversed_reviewers = np.flip(naive_ranked_reviewers)
+        
+        valid_ranked_reviewers = []
+        for reviewer in reversed_reviewers:
+            if M[reviewer][paper] == 0:
+                valid_ranked_reviewers.append(reviewer)
+        result.append(valid_ranked_reviewers)
+
+        for i in range(len(valid_ranked_reviewers) - 1):
+            assert(S[valid_ranked_reviewers[i], paper] >= S[valid_ranked_reviewers[i+1], paper])
+
+        
+    return np.array(result, dtype=object)
+
+# Return, for each reviewer, a list of non-conflicting papers
+# ordered by decreasing similarity
+def valid_ranked_papers_for_all_reviewers(S, M):
+    n = len(S)
+    result = []
+   
+    for rev in range(n):
+        naive_ranked_paps = np.argsort(S[rev, :])
+        reversed_paps = np.flip(naive_ranked_paps) # papers in high to low sim order
+        
+        valid_ranked_paps = []
+        for pap in reversed_paps:
+            if M[rev][pap] == 0:
+                valid_ranked_paps.append(pap)
+        result.append(valid_ranked_paps)
+
+        for j in range(len(valid_ranked_paps) - 1):
+            assert(S[rev, valid_ranked_paps[j]] >= S[rev, valid_ranked_paps[j+1]])
+
+        
+    return np.array(result, dtype=object)
+
 

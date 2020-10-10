@@ -7,49 +7,6 @@ import copy
 import algos
 import sys
 
-# Return, for each paper, a list of non-conflicting reviewers
-# ordered by decreasing similarity
-def valid_ranked_reviewers_for_all_papers():
-    result = []
-    
-    for paper in range(d):
-        naive_ranked_reviewers = np.argsort(S[:, paper])
-        reversed_reviewers = np.flip(naive_ranked_reviewers)
-        
-        valid_ranked_reviewers = []
-        for reviewer in reversed_reviewers:
-            if M[reviewer][paper] == 0:
-                valid_ranked_reviewers.append(reviewer)
-        result.append(valid_ranked_reviewers)
-
-        for i in range(len(valid_ranked_reviewers) - 1):
-            assert(S[valid_ranked_reviewers[i], paper] >= S[valid_ranked_reviewers[i+1], paper])
-
-        
-    return np.array(result, dtype=object)
-
-# Return, for each reviewer, a list of non-conflicting papers
-# ordered by decreasing similarity
-def valid_ranked_papers_for_all_reviewers():
-    result = []
-    
-    for rev in range(n):
-        naive_ranked_paps = np.argsort(S[rev, :])
-        reversed_paps = np.flip(naive_ranked_paps) # papers in high to low sim order
-        
-        valid_ranked_paps = []
-        for pap in reversed_paps:
-            if M[rev][pap] == 0:
-                valid_ranked_paps.append(pap)
-        result.append(valid_ranked_paps)
-
-        for j in range(len(valid_ranked_paps) - 1):
-            assert(S[rev, valid_ranked_paps[j]] >= S[rev, valid_ranked_paps[j+1]])
-
-        
-    return np.array(result, dtype=object)
-
-
 # Modify S_new by adding bids from all honest reviewers
 def random_honest_bids(S_new, manipulator):
     def do_rev_bids(rev, p, pap_frac): # add bids for rev
@@ -99,11 +56,12 @@ def main():
             new_S = np.array(S)
 
             # Manipulator bids
-            for j in range(d):
-                if j == paper:
-                    new_S[manipulator][j] *= bidding_scale
-                else:
-                    new_S[manipulator][j] /= bidding_scale
+            if manip_bids:
+                for j in range(d):
+                    if j == paper:
+                        new_S[manipulator][j] *= bidding_scale
+                    else:
+                        new_S[manipulator][j] /= bidding_scale
 
             if honest_bids:
                 random_honest_bids(new_S, manipulator)
@@ -130,19 +88,12 @@ def main():
         bidding_scale = bidding_scale)
  
     
-    # Quick plot    
     t = int(time.time())
-    plt.plot(mani_values, y_of_xs)
-    plt.xlabel("xth best reviewer")
-    plt.ylabel("fraction of asssignments assigned")
-    plt.savefig(f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_trials{num_selections}_" + str(t) + ".png")
-    plt.clf()
-    
     time_taken = time.time() - start_time
     print(f"Total time: {time_taken}")
     
     # Save data
-    title = f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_trials{num_selections}_" + str(t)
+    title = f"{mani_values[0]}-{mani_values[-1]}_manipulation_baseline{baseline}_honestbids{honest_bids}_scale{bidding_scale}_trials{num_selections}_manip{manip_bids}_" + str(t)
     
     np.savez(title, \
     mani_values = mani_values, \
@@ -173,7 +124,7 @@ dataset = "../data/iclr2018.npz"
 # int(2**(i.5)) - 1: [0, 1, 4, 10, 21, 44, 89, 180, 361] 
 mani_values = [0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 2, 4, 10, 21, 44, 89, 180, 361]
 
-num_selections = 50 # number of trials per mani_value
+num_selections =50 # number of trials per mani_value
 
 # The following block is referenced from github.com/xycforgithub/StrategyProof_Conference_Review
 scores = np.load(dataset)
@@ -187,10 +138,13 @@ d = len(S[0]) #number of papers
 baseline = (sys.argv[1] == 'standard')
 honest_bids = (sys.argv[2] == 'bids')
 bidding_scale = int(sys.argv[3])
-print("baseline", baseline, "honest_bids", honest_bids, "scale", bidding_scale)
+manip_bids = True
+if len(sys.argv) == 5 and sys.argv[4] == "nomanip":
+    manip_bids = False
+print("baseline", baseline, "honest_bids", honest_bids, "scale", bidding_scale, "manip", manip_bids)
 
 # Sort revs and paps
-ranked_reviewers = valid_ranked_reviewers_for_all_papers()
-ranked_papers = valid_ranked_papers_for_all_reviewers()
+ranked_reviewers = algos.valid_ranked_reviewers_for_all_papers(S, M)
+ranked_papers = algos.valid_ranked_papers_for_all_reviewers(S, M)
 
 main()
