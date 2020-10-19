@@ -89,11 +89,12 @@ def plot_res(b, o, nm, name):
 
 # Plots legend for manipulation experiment
 def leg():
+    ms2 = ms
     plt.rcParams.update({'font.size': 10})
-    plt.plot(np.arange(10), np.zeros(10), 'rs--', label='Our randomized assignment algorithm (Q=0.5)', linewidth=lw, markersize=ms)
-    plt.plot(np.arange(10), np.zeros(10), 'bo-', label='Standard assignment algorithm', linewidth=lw, markersize=ms)
-    plt.plot(np.arange(10), np.zeros(10), 'gX-.', label='Standard assignment algorithm, no manipulation', linewidth=lw, markersize=ms)
-    plt.legend(ncol=1)
+    plt.plot(np.arange(10), np.zeros(10), 'rs--', label='Our randomized assignment algorithm (Q=0.5)', linewidth=lw, markersize=ms2)
+    plt.plot(np.arange(10), np.zeros(10), 'bo-', label='Standard assignment algorithm', linewidth=lw, markersize=ms2)
+    plt.plot(np.arange(10), np.zeros(10), 'gX-.', label='Standard assignment algorithm, no manipulation', linewidth=lw, markersize=ms2)
+    plt.legend(ncol=1, handlelength=4)
     plt.savefig("legend.pdf")
     plt.show()
     plt.close()

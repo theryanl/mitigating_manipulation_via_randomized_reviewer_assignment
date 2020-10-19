@@ -4,7 +4,9 @@ The data/ subdirectory contains for convenience the correctly-formatted .npz fil
 
 The baseline_algo/ subdirectory contains files used to run a baseline assignment algorithm not used in the paper.
 
-The testrunner files run the various experiments present in the paper and save .npy files of the output data. The experiments run by each testrunner are as follows:
+The manipulation_experiment/ subdirectory contains the additional experiment regarding the algorithms' effectiveness against bidding manipulation. See readme.txt within.
+
+The testrunner files run the various assignment-quality experiments present in the paper and save .npy files of the output data. The experiments run by each testrunner are as follows:
 	- A: varies Q vs either objective, on a dataset
 	- B: varies size vs runtime, on uniform random simulation
 	- C: varies institution loads, on a dataset
@@ -14,7 +16,7 @@ The testrunner files run the various experiments present in the paper and save .
 	- G: varies institution loads, on uniform random simulation
 	- H: varies size vs runtime, on uniform random simulation 
 
-The experiments in the paper can be re-run with the following commands (each of which save .npy files of the output data):
+The assignment-quality experiments in the paper can be re-run with the following commands (each of which save .npy files of the output data):
 	- python testrunnerA.py data/iclr2018.npz 0 6 3
 	- python testrunnerA.py data/preflib1.npz 0 6 3
 	- python testrunnerA.py data/preflib2.npz 0 7 3

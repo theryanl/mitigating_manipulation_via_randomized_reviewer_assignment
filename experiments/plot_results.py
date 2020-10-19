@@ -19,18 +19,20 @@ ls =['solid', 'dotted', 'dashed', 'dashdot', 'solid']
 
 # Plots the legend for the datasets
 def legend():
+    plt.figure(figsize=(10, 5))
     plt.rcParams.update({'font.size': 10})
     for i in range(4):
         plt.plot(np.arange(10), np.zeros(10), label=labels[i], color=colors[i], marker=markers[i], ms=markersize, linewidth=lw, linestyle=ls[i])
-    plt.legend(ncol=4)
+    plt.legend(ncol=4, handlelength=4)
     plt.savefig("legend_full.pdf")
 
 # Plots the legend for the simulations
 def sim_legend():
+    plt.figure(figsize=(10, 5))
     plt.rcParams.update({'font.size': 9})
     for i in range(5):
         plt.plot(np.arange(10), np.zeros(10), label=sim_labels[i], color=colors[i], marker=markers[i], ms=markersize, linewidth=lw, linestyle=ls[i])
-    plt.legend(ncol=3)
+    plt.legend(ncol=3, handlelength=4)
     plt.savefig("sim_legend_full.pdf")
 
 def plotA(obj): # Q vs objective experiment, datasets
