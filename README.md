@@ -1,5 +1,5 @@
-# upper-bounding-pairwise-matching-probability-with-BvN-sampling
-This repository contains code to generate a integral assignment of papers to reviewers in an academic conference setting. In particular, it allows for the guarantee that the probability that any pair is matched is at most Q. 
+# Mitigating Manipulation via Randomized Reviewer Assignments
+This repository contains code to generate randomized paper assignments in an academic conference setting ([paper](https://arxiv.org/abs/2006.16437)). In particular, it allows for the guarantee that the probability that any pair is matched is at most Q.
 
 We get our desired assignment by following these 2 steps:
 
